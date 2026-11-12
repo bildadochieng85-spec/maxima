@@ -1,3 +1,5 @@
+import { categories } from "../catalog.js";
+
 export function Brand({ footer = false }) {
   return (
     <a className={`brand${footer ? " brand-footer" : ""}`} href="#/" aria-label="Maximall home">
@@ -10,7 +12,7 @@ export function Brand({ footer = false }) {
   );
 }
 
-export default function SiteShell({ children, cartCount, onSearch, query, user }) {
+export default function SiteShell({ children, cartCount, onSearch, onSearchCategory, onSearchSubmit, query, searchCategory, user }) {
   return (
     <>
       <div className="announcement">
@@ -23,7 +25,12 @@ export default function SiteShell({ children, cartCount, onSearch, query, user }
             <span>Deliver to</span>
             <strong><span aria-hidden="true">⌖</span> Kenya</strong>
           </div>
-          <form className="search" role="search" onSubmit={event => event.preventDefault()}>
+          <form className="search" role="search" onSubmit={event => { event.preventDefault(); onSearchSubmit(); }}>
+            <label className="sr-only" htmlFor="search-category">Search department</label>
+            <select id="search-category" className="search-category" value={searchCategory} onChange={event => onSearchCategory(event.target.value)}>
+              <option value="all">All departments</option>
+              {categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>)}
+            </select>
             <label className="sr-only" htmlFor="search-input">Search products and categories</label>
             <input
               id="search-input"

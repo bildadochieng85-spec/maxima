@@ -48,6 +48,7 @@ function useRoute() {
 function App() {
   const route = useRoute();
   const [query, setQuery] = useState("");
+  const [searchCategory, setSearchCategory] = useState("all");
   const [cart, setCart] = useState(readCart);
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
@@ -55,6 +56,9 @@ function App() {
   const routeSearch = getRouteSearch();
   const routeParams = useMemo(() => new URLSearchParams(routeSearch), [routeSearch]);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  function submitSearch() {
+    if (!["/", "/categories", "/featured"].includes(route)) window.location.hash = "#/";
+  }
   const routeTitle = route.startsWith("/category/")
     ? categories.find(category => category.id === route.slice("/category/".length))?.name || "Category not found"
     : ({
@@ -132,7 +136,7 @@ function App() {
 
   let page;
   if (route === "/" || route === "/categories" || route === "/featured") {
-    page = <HomePage query={query} onAdd={addToCart} />;
+    page = <HomePage query={query} searchCategory={searchCategory} onAdd={addToCart} />;
   } else if (route.startsWith("/category/")) {
     page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} onAdd={addToCart} />;
   } else if (route === "/cart") {
@@ -152,7 +156,15 @@ function App() {
   }
 
   return (
-    <SiteShell cartCount={cartCount} onSearch={setQuery} query={query} user={user}>
+    <SiteShell
+      cartCount={cartCount}
+      onSearch={setQuery}
+      onSearchCategory={setSearchCategory}
+      onSearchSubmit={submitSearch}
+      query={query}
+      searchCategory={searchCategory}
+      user={user}
+    >
       {authError && <p className="global-error" role="alert">Sign-in status could not be checked: {authError}</p>}
       {page}
     </SiteShell>

@@ -82,12 +82,18 @@ function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
   );
 }
 
-export function HomePage({ query, onAdd }) {
+export function HomePage({ query, searchCategory, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const returnFocusRef = useRef(null);
   const term = query.trim().toLowerCase();
-  const matchingCategories = categories.filter(category => `${category.name} ${category.description}`.toLowerCase().includes(term));
-  const matchingProducts = (term ? products : featuredProducts).filter(product => matchesProduct(product, term));
+  const matchingCategories = categories.filter(category =>
+    (searchCategory === "all" || category.id === searchCategory) &&
+    `${category.name} ${category.description}`.toLowerCase().includes(term)
+  );
+  const productList = term || searchCategory !== "all" ? products : featuredProducts;
+  const matchingProducts = productList.filter(product =>
+    (searchCategory === "all" || product.category === searchCategory) && matchesProduct(product, term)
+  );
   const closeDialog = () => setSelectedProduct(null);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
