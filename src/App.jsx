@@ -79,6 +79,10 @@ function App() {
   }, [routeTitle]);
 
   useEffect(() => {
+    if (route === "/featured") document.getElementById("featured")?.scrollIntoView();
+  }, [route]);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser);
       setAuthLoading(false);
