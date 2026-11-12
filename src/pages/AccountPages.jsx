@@ -121,7 +121,7 @@ export function SignupPage() {
         <label>Full name<input name="name" autoComplete="name" required /></label>
         <label>Username<input name="username" autoComplete="username" required /></label>
         <label>Email<input name="email" type="email" autoComplete="email" required /></label>
-        <label>Phone number<input name="phone" type="tel" autoComplete="tel" required /></label>
+        <label>Phone number<input name="phone" type="tel" autoComplete="tel" required pattern="(?:\\+?254|0)7\\d{8}" title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX" /></label>
         <label>Password<input name="password" type="password" autoComplete="new-password" required /></label>
         <label>Confirm password<input name="confirmPassword" type="password" autoComplete="new-password" required /></label>
         <label className="checkbox-label"><input type="checkbox" name="agree" required /> I confirm that the information provided is true and correct.</label>
