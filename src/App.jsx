@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase.js";
 import SiteShell from "./components/SiteShell.jsx";
+import { categories } from "./catalog.js";
 import { CartPage, CategoryPage, CheckoutPage, HomePage, PaymentPage, readCart } from "./pages/StorePages.jsx";
 import { DashboardPage, LoginPage, SignupPage } from "./pages/AccountPages.jsx";
 
@@ -54,6 +55,23 @@ function App() {
   const routeSearch = getRouteSearch();
   const routeParams = useMemo(() => new URLSearchParams(routeSearch), [routeSearch]);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const routeTitle = route.startsWith("/category/")
+    ? categories.find(category => category.id === route.slice("/category/".length))?.name || "Category not found"
+    : ({
+      "/": "Your everyday marketplace",
+      "/categories": "Shop all",
+      "/featured": "Popular picks",
+      "/cart": "Your cart",
+      "/checkout": "Checkout",
+      "/mpesa": "Payment",
+      "/login": "Sign in",
+      "/signup": "Create account",
+      "/dashboard": "My account",
+    }[route] || "Page not found");
+
+  useEffect(() => {
+    document.title = `${routeTitle} | Maximall`;
+  }, [routeTitle]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
