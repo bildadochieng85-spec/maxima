@@ -214,6 +214,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 .product-quick-view:hover { background: #f8f9fa; }
 .wishlist-button { position: absolute; z-index: 2; top: 10px; right: 10px; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: #a63c3c; cursor: pointer; font-size: 20px; line-height: 1; }
 .wishlist-button[aria-pressed="true"] { border-color: #e7b5b5; background: #fff3f3; color: #b42318; }
+.cart-notice { position: fixed; z-index: 1100; right: 20px; bottom: 20px; max-width: calc(100vw - 40px); padding: 13px 15px; display: flex; align-items: center; gap: 14px; border: 1px solid var(--line); border-left: 4px solid #18794e; border-radius: 8px; background: #fff; box-shadow: 0 10px 30px #102b5326; color: var(--navy); font-size: 13px; }
+.cart-notice span { flex: 1; }
+.cart-notice a { color: var(--blue); font-weight: 750; white-space: nowrap; }
+.cart-notice button { width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: #f2f4f6; color: var(--ink); cursor: pointer; font-size: 20px; line-height: 1; }
 .search-feedback { min-height: 0; margin: -9px 0 14px; color: var(--muted); font-size: 12px; }
 .search-feedback:empty { display: none; }
 
@@ -286,6 +290,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
   .benefits > div + div { padding-top: 10px; border-top: 1px solid var(--line); border-left: 0; }
   .benefit-icon { width: 24px; text-align: center; }
   .section, .closing-banner { width: calc(100% - 32px); margin-top: 53px; }
+  .cart-notice { right: 12px; bottom: 12px; max-width: calc(100vw - 24px); gap: 9px; font-size: 12px; }
   .section-heading { align-items: flex-start; }
   .featured-section .section-heading { flex-wrap: wrap; }
   .featured-section .section-heading-controls { width: 100%; justify-content: space-between; }

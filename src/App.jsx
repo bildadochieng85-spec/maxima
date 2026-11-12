@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase.js";
 import SiteShell from "./components/SiteShell.jsx";
@@ -66,6 +66,8 @@ function App() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
+  const [cartNotice, setCartNotice] = useState("");
+  const cartNoticeTimer = useRef(null);
   const routeSearch = getRouteSearch();
   const routeParams = useMemo(() => new URLSearchParams(routeSearch), [routeSearch]);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -140,6 +142,10 @@ function App() {
     return () => window.removeEventListener("storage", syncStoreData);
   }, []);
 
+  useEffect(() => () => {
+    if (cartNoticeTimer.current !== null) window.clearTimeout(cartNoticeTimer.current);
+  }, []);
+
   function addToCart(product) {
     setCart(current => {
       const existing = current.find(item => String(item.id) === String(product.id));
@@ -150,6 +156,20 @@ function App() {
       }
       return [...current, { ...product, id: String(product.id), price: Number(product.price), quantity: 1, qty: 1 }];
     });
+    setCartNotice(`${product.name} added to your cart.`);
+    if (cartNoticeTimer.current !== null) window.clearTimeout(cartNoticeTimer.current);
+    cartNoticeTimer.current = window.setTimeout(() => {
+      setCartNotice("");
+      cartNoticeTimer.current = null;
+    }, 3000);
+  }
+
+  function dismissCartNotice() {
+    if (cartNoticeTimer.current !== null) {
+      window.clearTimeout(cartNoticeTimer.current);
+      cartNoticeTimer.current = null;
+    }
+    setCartNotice("");
   }
 
   function changeQuantity(id, amount) {
@@ -214,6 +234,13 @@ function App() {
       user={user}
     >
       {authError && <p className="global-error" role="alert">Sign-in status could not be checked: {authError}</p>}
+      {cartNotice && (
+        <div className="cart-notice" role="status" aria-live="polite" aria-atomic="true">
+          <span>{cartNotice}</span>
+          <a href="#/cart">View cart</a>
+          <button type="button" onClick={dismissCartNotice} aria-label="Dismiss cart confirmation">×</button>
+        </div>
+      )}
       {page}
     </SiteShell>
   );
