@@ -165,7 +165,10 @@ export function HomePage({ query, onAdd }) {
                     <span className="product-link">Shop now <span aria-hidden="true">→</span></span>
                   </div>
                 </a>
-                <button type="button" className="product-quick-view" onClick={event => openDialog(product, event.currentTarget)} aria-label={`Quick view ${product.name}`}>Quick view</button>
+                <div className="product-card-actions">
+                  <button type="button" className="product-add-button" onClick={() => onAdd(product)} aria-label={`Add ${product.name} to cart`}>Add to cart</button>
+                  <button type="button" className="product-quick-view" onClick={event => openDialog(product, event.currentTarget)} aria-label={`Quick view ${product.name}`}>Quick view</button>
+                </div>
               </article>
             ))}
           </div>

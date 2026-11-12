@@ -196,7 +196,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 .product-price { display: block; margin: -6px 0 11px; color: var(--ink); font-size: 16px; }
 .product-link { color: var(--blue); font-size: 11px; font-weight: 700; }
 .product-link span { margin-left: 5px; }
-.product-quick-view { width: calc(100% - 28px); margin: 0 14px 14px; padding: 8px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--blue); cursor: pointer; font-size: 11px; font-weight: 700; }
+.product-card-actions { padding: 0 14px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.product-card-actions button { min-width: 0; padding: 8px 4px; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; }
+.product-card-actions .product-add-button { border-color: var(--navy); background: var(--navy); color: #fff; }
+.product-add-button:hover { background: var(--blue); }
+.product-quick-view { background: #fff; color: var(--blue); }
 .product-quick-view:hover { background: #f8f9fa; }
 .search-feedback { min-height: 0; margin: -9px 0 14px; color: var(--muted); font-size: 12px; }
 .search-feedback:empty { display: none; }
