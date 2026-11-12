@@ -93,6 +93,7 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
   const [cartNotice, setCartNotice] = useState("");
+  const [cartUndoItem, setCartUndoItem] = useState(null);
   const cartNoticeTimer = useRef(null);
   const routeSearch = getRouteSearch();
   const routeParams = useMemo(() => new URLSearchParams(routeSearch), [routeSearch]);
@@ -207,13 +208,22 @@ function App() {
     showCartNotice(`${itemCount} saved ${itemCount === 1 ? "item" : "items"} added to your cart.`);
   }
 
-  function showCartNotice(message) {
+  function showCartNotice(message, undoItem = null) {
     setCartNotice(message);
+    setCartUndoItem(undoItem);
     if (cartNoticeTimer.current !== null) window.clearTimeout(cartNoticeTimer.current);
     cartNoticeTimer.current = window.setTimeout(() => {
       setCartNotice("");
+      setCartUndoItem(null);
       cartNoticeTimer.current = null;
     }, 3000);
+  }
+
+  function undoCartRemoval() {
+    if (!cartUndoItem) return;
+    const restoredItem = cartUndoItem;
+    setCart(current => addProductToCart(current, restoredItem, restoredItem.quantity));
+    showCartNotice(`${restoredItem.name} restored to your cart.`);
   }
 
   function buyNow(product, quantity = 1) {
@@ -244,15 +254,19 @@ function App() {
   }
 
   function removeFromCart(id) {
+    const removedItem = cart.find(item => item.id === String(id));
     setCart(current => current.filter(item => item.id !== String(id)));
+    if (removedItem) showCartNotice(`${removedItem.name} removed from your cart.`, removedItem);
   }
 
   function saveForLater(id) {
     const productId = String(id);
+    const savedItem = cart.find(item => item.id === productId);
     if (products.some(product => String(product.id) === productId)) {
       setWishlist(current => current.includes(productId) ? current : [...current, productId]);
     }
     removeFromCart(productId);
+    if (savedItem) showCartNotice(`${savedItem.name} saved for later.`);
   }
 
   function toggleWishlist(id) {
@@ -263,7 +277,10 @@ function App() {
   }
 
   function clearCart() {
-    if (window.confirm("Are you sure you want to clear the cart?")) setCart([]);
+    if (window.confirm("Are you sure you want to clear the cart?")) {
+      setCart([]);
+      dismissCartNotice();
+    }
   }
 
   let page;
@@ -309,6 +326,7 @@ function App() {
         <div className="cart-notice" role="status" aria-live="polite" aria-atomic="true">
           <span>{cartNotice}</span>
           <a href="#/cart">View cart</a>
+          {cartUndoItem && <button type="button" className="cart-undo" onClick={undoCartRemoval}>Undo</button>}
           <button type="button" onClick={dismissCartNotice} aria-label="Dismiss cart confirmation">×</button>
         </div>
       )}

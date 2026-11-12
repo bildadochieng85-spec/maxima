@@ -216,7 +216,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 .product-quick-view:hover { background: #f8f9fa; }
 .wishlist-button { position: absolute; z-index: 2; top: 10px; right: 10px; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: #a63c3c; cursor: pointer; font-size: 20px; line-height: 1; }
 .wishlist-button[aria-pressed="true"] { border-color: #e7b5b5; background: #fff3f3; color: #b42318; }
-.cart-notice { position: fixed; z-index: 1100; right: 20px; bottom: 20px; max-width: calc(100vw - 40px); padding: 13px 15px; display: flex; align-items: center; gap: 14px; border: 1px solid var(--line); border-left: 4px solid #18794e; border-radius: 8px; background: #fff; box-shadow: 0 10px 30px #102b5326; color: var(--navy); font-size: 13px; }
+.cart-notice { position: fixed; z-index: 1100; right: 20px; bottom: 20px; max-width: calc(100vw - 40px); padding: 13px 15px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; border: 1px solid var(--line); border-left: 4px solid #18794e; border-radius: 8px; background: #fff; box-shadow: 0 10px 30px #102b5326; color: var(--navy); font-size: 13px; }
+.cart-undo { padding: 0; border: 0; background: transparent; color: var(--blue); cursor: pointer; font: inherit; font-weight: 700; }
 .back-to-top { position: fixed; z-index: 1050; right: 20px; bottom: 82px; padding: 10px 14px; border: 0; border-radius: 20px; background: var(--blue); box-shadow: 0 4px 14px #102b5326; color: #fff; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; }
 .back-to-top:hover { background: var(--navy); }
 .cart-notice span { flex: 1; }
