@@ -13,7 +13,7 @@ export function Brand({ footer = false }) {
   );
 }
 
-export default function SiteShell({ children, cartCount, cartSubtotal, onSearch, onSearchCategory, onSearchSubmit, query, route, searchCategory, user }) {
+export default function SiteShell({ children, cartCount, cartSubtotal, onSearch, onSearchCategory, onSearchSubmit, query, route, searchCategory, user, wishlistCount }) {
   return (
     <>
       <div className="announcement">
@@ -52,6 +52,11 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
             <a className="account-link" href={user ? "#/dashboard" : "#/login"}>
               <span aria-hidden="true">♙</span> {user ? "My account" : "Sign in"}
             </a>
+            <a className="wishlist-link" href="#/wishlist" aria-current={route === "/wishlist" ? "page" : undefined} aria-label={`Saved items, ${wishlistCount}`}>
+              <span className="wishlist-icon" aria-hidden="true">♡</span>
+              <span className="wishlist-label">Saved</span>
+              <span className="wishlist-count">{wishlistCount}</span>
+            </a>
             <a className="cart-link" href="#/cart" aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}${cartCount ? `, subtotal ${formatPrice(cartSubtotal)}` : ""}`}>
               <span className="cart-icon" aria-hidden="true">🛒</span>
               <span className="cart-details">
@@ -76,6 +81,7 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
         <p>Shop your community. Find your everyday.</p>
         <div className="footer-links">
           <a href="#/login">Sign in</a>
+          <a href="#/wishlist">Saved items</a>
           <a href="#/cart">Your cart</a>
           <a href="#/categories">Browse products</a>
         </div>

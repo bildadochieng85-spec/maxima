@@ -1,6 +1,6 @@
 # Maximall
 
-The storefront, product categories, cart, checkout, payment simulation, sign-in, signup, and account dashboard are rendered by React.
+The storefront includes product search and department filters, saved items, a cart, checkout, payment simulation, sign-in, signup, and an account dashboard.
 
 ## Run locally
 

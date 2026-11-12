@@ -17,9 +17,24 @@ function isValidKenyanPhone(phone) {
   return /^(?:\+?254|0)7\d{8}$/.test(normalized);
 }
 
-function ProductCard({ product, onView, onAdd }) {
+function WishlistButton({ product, isSaved, onToggle }) {
+  return (
+    <button
+      type="button"
+      className="wishlist-button"
+      aria-pressed={isSaved}
+      aria-label={`${isSaved ? "Remove" : "Save"} ${product.name} ${isSaved ? "from" : "to"} saved items`}
+      onClick={() => onToggle(product.id)}
+    >
+      {isSaved ? "♥" : "♡"}
+    </button>
+  );
+}
+
+function ProductCard({ product, onView, onAdd, isSaved, onToggleWishlist }) {
   return (
     <article className="store-product-card">
+      <WishlistButton product={product} isSaved={isSaved} onToggle={onToggleWishlist} />
       <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
       <div className="store-product-info">
         <h3>{product.name}</h3>
@@ -82,7 +97,7 @@ function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
   );
 }
 
-export function HomePage({ query, searchCategory, onAdd }) {
+export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const returnFocusRef = useRef(null);
   const term = query.trim().toLowerCase();
@@ -168,6 +183,7 @@ export function HomePage({ query, searchCategory, onAdd }) {
           <div className="product-grid">
             {matchingProducts.map(product => (
               <article className="product-card" key={product.id}>
+                <WishlistButton product={product} isSaved={wishlist.includes(String(product.id))} onToggle={onToggleWishlist} />
                 <a className="product-card-link" href={`#/category/${product.category}`}>
                   <div className="product-image">
                     <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
@@ -199,7 +215,7 @@ export function HomePage({ query, searchCategory, onAdd }) {
   );
 }
 
-export function CategoryPage({ categoryId, query, onAdd }) {
+export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sortOrder, setSortOrder] = useState("recommended");
   const returnFocusRef = useRef(null);
@@ -254,7 +270,16 @@ export function CategoryPage({ categoryId, query, onAdd }) {
           </div>
           {categoryProducts.length ? (
             <div className="store-product-grid">
-              {sortedProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} onAdd={onAdd} />)}
+              {sortedProducts.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onView={openDialog}
+                  onAdd={onAdd}
+                  isSaved={wishlist.includes(String(product.id))}
+                  onToggleWishlist={onToggleWishlist}
+                />
+              ))}
             </div>
           ) : (
             <div className="empty-state">
@@ -265,6 +290,44 @@ export function CategoryPage({ categoryId, query, onAdd }) {
           )}
         </div>
       </div>
+      <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
+    </main>
+  );
+}
+
+export function WishlistPage({ wishlist, onToggleWishlist, onAdd }) {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const returnFocusRef = useRef(null);
+  const savedProducts = products.filter(product => wishlist.includes(String(product.id)));
+  const openDialog = (product, trigger) => {
+    returnFocusRef.current = trigger;
+    setSelectedProduct(product);
+  };
+  const closeDialog = () => setSelectedProduct(null);
+
+  return (
+    <main className="page-container">
+      <h1>Saved items <span className="muted">({savedProducts.length})</span></h1>
+      {savedProducts.length ? (
+        <div className="store-product-grid">
+          {savedProducts.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onView={openDialog}
+              onAdd={onAdd}
+              isSaved
+              onToggleWishlist={onToggleWishlist}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="empty-state">
+          <h2>No saved items yet</h2>
+          <p>Save products you like and they’ll be waiting here.</p>
+          <a className="button button-primary" href="#/categories">Browse products</a>
+        </div>
+      )}
       <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
     </main>
   );

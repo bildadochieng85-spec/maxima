@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase.js";
 import SiteShell from "./components/SiteShell.jsx";
 import { categories, formatPrice } from "./catalog.js";
-import { CartPage, CategoryPage, CheckoutPage, HomePage, PaymentPage, readCart } from "./pages/StorePages.jsx";
+import { CartPage, CategoryPage, CheckoutPage, HomePage, PaymentPage, readCart, WishlistPage } from "./pages/StorePages.jsx";
 import { DashboardPage, LoginPage, SignupPage } from "./pages/AccountPages.jsx";
 
 function currentRoute() {
@@ -31,6 +31,18 @@ function getRouteSearch() {
   return hashParts[1] || window.location.search.slice(1);
 }
 
+function readWishlist() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    return Array.isArray(saved)
+      ? [...new Set(saved.filter(id => typeof id === "string" || typeof id === "number").map(String))]
+      : [];
+  } catch (error) {
+    console.error("Could not read saved items.", error);
+    return [];
+  }
+}
+
 function useRoute() {
   const [route, setRoute] = useState(currentRoute);
   useEffect(() => {
@@ -50,6 +62,7 @@ function App() {
   const [query, setQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("all");
   const [cart, setCart] = useState(readCart);
+  const [wishlist, setWishlist] = useState(readWishlist);
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
@@ -57,6 +70,7 @@ function App() {
   const routeParams = useMemo(() => new URLSearchParams(routeSearch), [routeSearch]);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const cartSubtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const wishlistCount = wishlist.length;
   function submitSearch() {
     if (!["/", "/categories", "/featured"].includes(route)) window.location.hash = "#/";
   }
@@ -67,6 +81,7 @@ function App() {
       "/categories": "Shop all",
       "/featured": "Popular picks",
       "/cart": "Your cart",
+      "/wishlist": "Saved items",
       "/checkout": "Checkout",
       "/mpesa": "Payment",
       "/login": "Sign in",
@@ -104,11 +119,20 @@ function App() {
   }, [cart]);
 
   useEffect(() => {
-    function syncCart(event) {
-      if (event.key === "cart") setCart(readCart());
+    try {
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    } catch (error) {
+      console.error("Could not save saved items.", error);
     }
-    window.addEventListener("storage", syncCart);
-    return () => window.removeEventListener("storage", syncCart);
+  }, [wishlist]);
+
+  useEffect(() => {
+    function syncStoreData(event) {
+      if (event.key === "cart") setCart(readCart());
+      if (event.key === "wishlist") setWishlist(readWishlist());
+    }
+    window.addEventListener("storage", syncStoreData);
+    return () => window.removeEventListener("storage", syncStoreData);
   }, []);
 
   function addToCart(product) {
@@ -135,15 +159,24 @@ function App() {
     setCart(current => current.filter(item => item.id !== String(id)));
   }
 
+  function toggleWishlist(id) {
+    const productId = String(id);
+    setWishlist(current => current.includes(productId)
+      ? current.filter(savedId => savedId !== productId)
+      : [...current, productId]);
+  }
+
   function clearCart() {
     if (window.confirm("Are you sure you want to clear the cart?")) setCart([]);
   }
 
   let page;
   if (route === "/" || route === "/categories" || route === "/featured") {
-    page = <HomePage query={query} searchCategory={searchCategory} onAdd={addToCart} />;
+    page = <HomePage query={query} searchCategory={searchCategory} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route.startsWith("/category/")) {
-    page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} onAdd={addToCart} />;
+    page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
+  } else if (route === "/wishlist") {
+    page = <WishlistPage wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route === "/cart") {
     page = <CartPage cart={cart} onChangeQuantity={changeQuantity} onRemove={removeFromCart} onClear={clearCart} />;
   } else if (route === "/checkout") {
@@ -164,6 +197,7 @@ function App() {
     <SiteShell
       cartCount={cartCount}
       cartSubtotal={cartSubtotal}
+      wishlistCount={wishlistCount}
       onSearch={setQuery}
       onSearchCategory={setSearchCategory}
       onSearchSubmit={submitSearch}
