@@ -314,7 +314,10 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
 
 export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [quantity, setQuantity] = useState("1");
   const returnFocusRef = useRef(null);
+  const requestedQuantity = Number(quantity);
+  const isValidQuantity = Number.isInteger(requestedQuantity) && requestedQuantity > 0;
   const product = products.find(item => String(item.id) === String(productId));
   const openDialog = (item, trigger) => {
     returnFocusRef.current = trigger;
@@ -359,9 +362,22 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
           <h1>{product.name}</h1>
           <p>{product.description}</p>
           <strong className="product-detail-price">{formatPrice(product.price)}</strong>
-          <button type="button" className="button button-primary" onClick={() => onAdd(product)}>
-            Add to cart
-          </button>
+          <div className="product-purchase-controls">
+            <label className="product-quantity-field" htmlFor="product-quantity">
+              Quantity
+              <input
+                id="product-quantity"
+                type="number"
+                min="1"
+                step="1"
+                value={quantity}
+                onChange={event => setQuantity(event.target.value)}
+              />
+            </label>
+            <button type="button" className="button button-primary" disabled={!isValidQuantity} onClick={() => onAdd(product, requestedQuantity)}>
+              Add to cart
+            </button>
+          </div>
           <p className="product-detail-note">Convenient delivery across Kenya</p>
         </section>
       </article>

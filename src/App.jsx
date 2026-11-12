@@ -146,17 +146,17 @@ function App() {
     if (cartNoticeTimer.current !== null) window.clearTimeout(cartNoticeTimer.current);
   }, []);
 
-  function addToCart(product) {
+  function addToCart(product, quantity = 1) {
     setCart(current => {
       const existing = current.find(item => String(item.id) === String(product.id));
       if (existing) {
         return current.map(item => item === existing
-          ? { ...item, quantity: item.quantity + 1, qty: item.quantity + 1 }
+          ? { ...item, quantity: item.quantity + quantity, qty: item.quantity + quantity }
           : item);
       }
-      return [...current, { ...product, id: String(product.id), price: Number(product.price), quantity: 1, qty: 1 }];
+      return [...current, { ...product, id: String(product.id), price: Number(product.price), quantity, qty: quantity }];
     });
-    setCartNotice(`${product.name} added to your cart.`);
+    setCartNotice(`${quantity > 1 ? `${quantity} × ` : ""}${product.name} added to your cart.`);
     if (cartNoticeTimer.current !== null) window.clearTimeout(cartNoticeTimer.current);
     cartNoticeTimer.current = window.setTimeout(() => {
       setCartNotice("");
