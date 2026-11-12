@@ -17,7 +17,7 @@ function isValidKenyanPhone(phone) {
   return /^(?:\+?254|0)7\d{8}$/.test(normalized);
 }
 
-function ProductCard({ product, onView }) {
+function ProductCard({ product, onView, onAdd }) {
   return (
     <article className="store-product-card">
       <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
@@ -25,7 +25,10 @@ function ProductCard({ product, onView }) {
         <h3>{product.name}</h3>
         <p>{product.description}</p>
         <strong>{formatPrice(product.price)}</strong>
-        <button type="button" className="button button-primary" onClick={event => onView(product, event.currentTarget)} aria-label={`View ${product.name} details`}>View product</button>
+        <div className="store-product-actions">
+          <button type="button" className="button button-primary" onClick={() => onAdd(product)} aria-label={`Add ${product.name} to cart`}>Add to cart</button>
+          <button type="button" className="button store-product-view" onClick={event => onView(product, event.currentTarget)} aria-label={`View ${product.name} details`}>Details</button>
+        </div>
       </div>
     </article>
   );
@@ -217,7 +220,7 @@ export function CategoryPage({ categoryId, query, onAdd }) {
       </div>
       {categoryProducts.length ? (
         <div className="store-product-grid">
-          {categoryProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} />)}
+          {categoryProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} onAdd={onAdd} />)}
         </div>
       ) : (
         <div className="empty-state">

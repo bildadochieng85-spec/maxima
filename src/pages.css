@@ -41,7 +41,9 @@
 .store-product-info h3 { margin: 0; color: var(--navy); font-size: 17px; }
 .store-product-info p { min-height: 40px; margin: 0; color: var(--muted); font-size: 12px; }
 .store-product-info > strong { color: var(--navy); font-size: 16px; }
-.store-product-info .button { width: 100%; margin-top: 5px; border: 0; cursor: pointer; }
+.store-product-actions { margin-top: 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.store-product-actions .button { width: 100%; min-width: 0; padding: 0 8px; border: 1px solid var(--navy); cursor: pointer; font-size: 11px; }
+.store-product-actions .store-product-view { background: #fff; color: var(--navy); }
 
 .product-dialog-backdrop {
   position: fixed;
