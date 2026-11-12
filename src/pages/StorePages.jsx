@@ -513,8 +513,10 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
 
 export function WishlistPage({ wishlist, onToggleWishlist, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [sortOrder, setSortOrder] = useState("recommended");
   const returnFocusRef = useRef(null);
   const savedProducts = products.filter(product => wishlist.includes(String(product.id)));
+  const sortedSavedProducts = sortProducts(savedProducts, sortOrder);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
     setSelectedProduct(product);
@@ -523,10 +525,21 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd }) {
 
   return (
     <main className="page-container">
-      <h1>Saved items <span className="muted">({savedProducts.length})</span></h1>
+      <div className="wishlist-heading">
+        <h1>Saved items <span className="muted">({savedProducts.length})</span></h1>
+        {savedProducts.length > 1 && (
+          <label className="catalog-sort">Sort by
+            <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
+              <option value="recommended">Recommended</option>
+              <option value="price-low">Price: low to high</option>
+              <option value="price-high">Price: high to low</option>
+            </select>
+          </label>
+        )}
+      </div>
       {savedProducts.length ? (
         <div className="store-product-grid">
-          {savedProducts.map(product => (
+          {sortedSavedProducts.map(product => (
             <ProductCard
               key={product.id}
               product={product}
