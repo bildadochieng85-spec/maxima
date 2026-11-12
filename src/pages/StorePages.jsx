@@ -466,7 +466,7 @@ export function CheckoutPage({ cart, user }) {
         <form className="checkout-card customer-form" onSubmit={placeOrder}>
           <h2>Customer details</h2>
           <label>Full name<input name="name" autoComplete="name" required /></label>
-          <label>Phone<input name="phone" type="tel" placeholder="2547XXXXXXXX" autoComplete="tel" required pattern="(?:\\+?254|0)7\\d{8}" title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX" /></label>
+          <label>Phone<input name="phone" type="tel" placeholder="2547XXXXXXXX" autoComplete="tel" required pattern="(?:\+?254|0)7\d{8}" title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX" /></label>
           <label>Delivery address <span className="muted">(optional)</span><textarea name="address" rows="3" autoComplete="street-address" /></label>
           {error && <p className="form-error" role="alert">{error}</p>}
           <button type="submit" className="button button-primary" disabled={!cart.length}>Place order &amp; pay (M-Pesa)</button>
@@ -637,7 +637,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
             onChange={event => setPhone(event.target.value)}
             placeholder="2547XXXXXXXX"
             inputMode="tel"
-            pattern="(?:\\+?254|0)7\\d{8}"
+            pattern="(?:\+?254|0)7\d{8}"
             title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX"
             aria-invalid={!phone || !isValidKenyanPhone(phone)}
           />
