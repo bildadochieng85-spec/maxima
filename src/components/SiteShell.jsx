@@ -35,7 +35,7 @@ export default function SiteShell({ children, cartCount, onSearch, query, user }
             <a className="account-link" href={user ? "#/dashboard" : "#/login"}>
               <span aria-hidden="true">♙</span> {user ? "My account" : "Sign in"}
             </a>
-            <a className="cart-link" href="#/cart">
+            <a className="cart-link" href="#/cart" aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}>
               <span aria-hidden="true">🛒</span> Cart <span className="cart-count" aria-live="polite" aria-atomic="true">{cartCount}</span>
             </a>
           </div>
