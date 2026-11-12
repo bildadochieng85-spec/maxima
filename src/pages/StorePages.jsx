@@ -8,6 +8,15 @@ function matchesProduct(product, term) {
   return `${product.name} ${product.description} ${categoryName}`.toLowerCase().includes(term);
 }
 
+function normalizePhone(phone) {
+  return String(phone || "").replace(/\s+/g, "").trim();
+}
+
+function isValidKenyanPhone(phone) {
+  const normalized = normalizePhone(phone);
+  return /^(?:\+?254|0)7\d{8}$/.test(normalized);
+}
+
 function ProductCard({ product, onView }) {
   return (
     <article className="store-product-card">
@@ -297,10 +306,14 @@ export function CheckoutPage({ cart, user }) {
 
     const form = new FormData(event.currentTarget);
     const name = String(form.get("name") || "").trim();
-    const phone = String(form.get("phone") || "").trim();
+    const phone = normalizePhone(form.get("phone"));
     const address = String(form.get("address") || "").trim();
     if (!name || !phone) {
       setError("Please enter your full name and phone number.");
+      return;
+    }
+    if (!isValidKenyanPhone(phone)) {
+      setError("Enter a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX.");
       return;
     }
 
@@ -442,8 +455,13 @@ export function PaymentPage({ search }) {
       setReceiptNo("");
       return;
     }
-    if (!phone.trim()) {
+    const normalizedPhone = normalizePhone(phone);
+    if (!normalizedPhone) {
       setError("Enter an M-Pesa phone number to continue.");
+      return;
+    }
+    if (!isValidKenyanPhone(normalizedPhone)) {
+      setError("Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX.");
       return;
     }
     setError("");
