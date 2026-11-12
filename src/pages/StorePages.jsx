@@ -108,10 +108,12 @@ function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
   );
 }
 
-export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [], onToggleWishlist, onAdd }) {
+export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [], onToggleWishlist, onAdd, onClearSearch, onClearRecentlyViewed }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sortOrder, setSortOrder] = useState("recommended");
+  const [recentlyViewedCleared, setRecentlyViewedCleared] = useState(false);
   const returnFocusRef = useRef(null);
+  const recentlyViewedStatusRef = useRef(null);
   const term = query.trim().toLowerCase();
   const matchingCategories = categories.filter(category =>
     (searchCategory === "all" || category.id === searchCategory) &&
@@ -126,6 +128,15 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
   const recentlyViewedProducts = recentlyViewed
     .map(id => products.find(product => String(product.id) === String(id)))
     .filter(Boolean);
+
+  useEffect(() => {
+    if (recentlyViewedProducts.length > 0) setRecentlyViewedCleared(false);
+  }, [recentlyViewedProducts.length]);
+
+  useEffect(() => {
+    if (recentlyViewedCleared) recentlyViewedStatusRef.current?.focus();
+  }, [recentlyViewedCleared]);
+
   const closeDialog = () => setSelectedProduct(null);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
@@ -205,6 +216,7 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
           {hasSearchFilters && matchingProducts.length === 0 && (
             <p className="search-feedback" role="status">
               No products found{term && ` for “${query.trim()}”`}. Try another search or department.
+              {" "}<button type="button" className="text-button" onClick={onClearSearch}>Clear search and filters</button>
             </p>
           )}
           <div className="product-grid">
@@ -232,21 +244,33 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
           </div>
         </section>
 
-        {recentlyViewedProducts.length > 0 && (
+        {(recentlyViewedProducts.length > 0 || recentlyViewedCleared) && (
           <section className="section product-related" aria-labelledby="recently-viewed-heading">
-            <h2 id="recently-viewed-heading">Recently viewed</h2>
-            <div className="store-product-grid">
-              {recentlyViewedProducts.map(product => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onView={openDialog}
-                  onAdd={onAdd}
-                  isSaved={wishlist.includes(String(product.id))}
-                  onToggleWishlist={onToggleWishlist}
-                />
-              ))}
+            <div className="section-heading">
+              <h2 id="recently-viewed-heading">Recently viewed</h2>
+              {recentlyViewedProducts.length > 0 && (
+                <button type="button" className="text-button" onClick={() => {
+                  onClearRecentlyViewed();
+                  setRecentlyViewedCleared(true);
+                }}>Clear history</button>
+              )}
             </div>
+            {recentlyViewedProducts.length > 0 ? (
+              <div className="store-product-grid">
+                {recentlyViewedProducts.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onView={openDialog}
+                    onAdd={onAdd}
+                    isSaved={wishlist.includes(String(product.id))}
+                    onToggleWishlist={onToggleWishlist}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p ref={recentlyViewedStatusRef} role="status" tabIndex={-1}>Recently viewed history cleared.</p>
+            )}
           </section>
         )}
 

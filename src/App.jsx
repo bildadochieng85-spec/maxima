@@ -95,6 +95,13 @@ function App() {
   function submitSearch() {
     if (!["/", "/categories", "/featured"].includes(route)) window.location.hash = "#/";
   }
+  function clearSearch() {
+    setQuery("");
+    setSearchCategory("all");
+  }
+  function clearRecentlyViewed() {
+    setRecentlyViewed([]);
+  }
   const routeTitle = route.startsWith("/product/")
     ? routeProduct?.name || "Product not found"
     : route.startsWith("/category/")
@@ -243,7 +250,7 @@ function App() {
 
   let page;
   if (route === "/" || route === "/categories" || route === "/featured") {
-    page = <HomePage query={query} searchCategory={searchCategory} wishlist={wishlist} recentlyViewed={recentlyViewed} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
+    page = <HomePage query={query} searchCategory={searchCategory} wishlist={wishlist} recentlyViewed={recentlyViewed} onToggleWishlist={toggleWishlist} onAdd={addToCart} onClearSearch={clearSearch} onClearRecentlyViewed={clearRecentlyViewed} />;
   } else if (route.startsWith("/product/")) {
     page = <ProductPage productId={route.slice("/product/".length)} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} onBuyNow={buyNow} />;
   } else if (route.startsWith("/category/")) {
