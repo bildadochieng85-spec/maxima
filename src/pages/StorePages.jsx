@@ -129,7 +129,7 @@ export function HomePage({ query, onAdd }) {
             <p>Find something good for every corner of your day.</p>
           </div>
           <div className="category-grid">
-            {matchingCategories.map((category, index) => (
+            {matchingCategories.map(category => (
               <a className="category-card" href={`#/category/${category.id}`} key={category.id}>
                 <span className="category-title">{category.name}</span>
                 <img src={category.image} alt="" loading="lazy" decoding="async" />
