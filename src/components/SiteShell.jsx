@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { categories, formatPrice } from "../catalog.js";
 
 export function Brand({ footer = false }) {
@@ -15,6 +15,7 @@ export function Brand({ footer = false }) {
 
 export default function SiteShell({ children, cartCount, cartSubtotal, onSearch, onSearchCategory, onSearchSubmit, query, route, searchCategory, user, wishlistCount }) {
   const searchInputRef = useRef(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
     function focusSearch(event) {
@@ -28,6 +29,16 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
 
     window.addEventListener("keydown", focusSearch);
     return () => window.removeEventListener("keydown", focusSearch);
+  }, []);
+
+  useEffect(() => {
+    function updateBackToTopVisibility() {
+      setShowBackToTop(window.scrollY > 400);
+    }
+
+    updateBackToTopVisibility();
+    window.addEventListener("scroll", updateBackToTopVisibility, { passive: true });
+    return () => window.removeEventListener("scroll", updateBackToTopVisibility);
   }, []);
 
   return (
@@ -106,6 +117,11 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
         </div>
         <small className="copyright">&copy; 2026 Maximall. All rights reserved.</small>
       </footer>
+      {showBackToTop && (
+        <button type="button" className="back-to-top" onClick={() => window.scrollTo(0, 0)}>
+          Back to top <span aria-hidden="true">↑</span>
+        </button>
+      )}
     </>
   );
 }
