@@ -71,6 +71,7 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
               value={query}
               onChange={event => onSearch(event.target.value)}
             />
+            {!query && <kbd className="search-shortcut" aria-hidden="true">/</kbd>}
             {query && (
               <button type="button" className="search-clear" onClick={() => onSearch("")} aria-label="Clear search">
                 Clear
