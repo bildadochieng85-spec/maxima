@@ -23,10 +23,24 @@ function ProductCard({ product, onView }) {
 }
 
 function ProductDialog({ product, onClose, onAdd }) {
+  const dialogRef = useRef(null);
+
   useEffect(() => {
     if (!product) return undefined;
     function handleKey(event) {
       if (event.key === "Escape") onClose();
+      if (event.key !== "Tab") return;
+      const focusable = dialogRef.current?.querySelectorAll(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable?.length) return;
+      if (event.shiftKey && document.activeElement === focusable[0]) {
+        event.preventDefault();
+        focusable[focusable.length - 1].focus();
+      } else if (!event.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+        event.preventDefault();
+        focusable[0].focus();
+      }
     }
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
@@ -36,7 +50,7 @@ function ProductDialog({ product, onClose, onAdd }) {
 
   return (
     <div className="product-dialog-backdrop" onMouseDown={event => event.target === event.currentTarget && onClose()}>
-      <section className="product-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-product-name">
+      <section ref={dialogRef} className="product-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-product-name">
         <button type="button" className="dialog-close" onClick={onClose} aria-label="Close product details" autoFocus>×</button>
         <img src={product.image} alt={product.name} />
         <div>
