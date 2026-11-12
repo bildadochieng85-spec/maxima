@@ -16,17 +16,22 @@ function ProductCard({ product, onView }) {
         <h3>{product.name}</h3>
         <p>{product.description}</p>
         <strong>{formatPrice(product.price)}</strong>
-        <button type="button" className="button button-primary" onClick={() => onView(product)}>View product</button>
+        <button type="button" className="button button-primary" onClick={event => onView(product, event.currentTarget)}>View product</button>
       </div>
     </article>
   );
 }
 
-function ProductDialog({ product, onClose, onAdd }) {
+function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
   const dialogRef = useRef(null);
 
   useEffect(() => {
-    if (!product) return undefined;
+    if (!product) {
+      const trigger = returnFocusRef?.current;
+      if (trigger?.isConnected) trigger.focus();
+      if (returnFocusRef) returnFocusRef.current = null;
+      return undefined;
+    }
     function handleKey(event) {
       if (event.key === "Escape") onClose();
       if (event.key !== "Tab") return;
@@ -44,7 +49,7 @@ function ProductDialog({ product, onClose, onAdd }) {
     }
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [product, onClose]);
+  }, [product, onClose, returnFocusRef]);
 
   if (!product) return null;
 
@@ -161,6 +166,7 @@ export function HomePage({ query }) {
 
 export function CategoryPage({ categoryId, query, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const returnFocusRef = useRef(null);
   const category = categories.find(item => item.id === categoryId);
   const term = query.trim().toLowerCase();
   const categoryProducts = useMemo(
@@ -168,6 +174,10 @@ export function CategoryPage({ categoryId, query, onAdd }) {
     [categoryId, term]
   );
   const closeDialog = () => setSelectedProduct(null);
+  const openDialog = (product, trigger) => {
+    returnFocusRef.current = trigger;
+    setSelectedProduct(product);
+  };
 
   if (!category) return <main className="page-container"><h1>Category not found</h1><a href="#/categories">Browse categories</a></main>;
 
@@ -187,7 +197,7 @@ export function CategoryPage({ categoryId, query, onAdd }) {
       </div>
       {categoryProducts.length ? (
         <div className="store-product-grid">
-          {categoryProducts.map(product => <ProductCard key={product.id} product={product} onView={setSelectedProduct} />)}
+          {categoryProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} />)}
         </div>
       ) : (
         <div className="empty-state">
@@ -196,7 +206,7 @@ export function CategoryPage({ categoryId, query, onAdd }) {
           <a className="button button-primary" href="#/categories">Browse other categories</a>
         </div>
       )}
-      <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} />
+      <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
     </main>
   );
 }
