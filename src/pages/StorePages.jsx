@@ -8,6 +8,11 @@ function matchesProduct(product, term) {
   return `${product.name} ${product.description} ${categoryName}`.toLowerCase().includes(term);
 }
 
+function sortProducts(productList, sortOrder) {
+  if (sortOrder === "recommended") return productList;
+  return [...productList].sort((a, b) => sortOrder === "price-low" ? a.price - b.price : b.price - a.price);
+}
+
 function normalizePhone(phone) {
   return String(phone || "").replace(/\s+/g, "").trim();
 }
@@ -99,6 +104,7 @@ function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
 
 export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [sortOrder, setSortOrder] = useState("recommended");
   const returnFocusRef = useRef(null);
   const term = query.trim().toLowerCase();
   const matchingCategories = categories.filter(category =>
@@ -110,6 +116,7 @@ export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, on
   const matchingProducts = productList.filter(product =>
     (searchCategory === "all" || product.category === searchCategory) && matchesProduct(product, term)
   );
+  const sortedProducts = sortProducts(matchingProducts, sortOrder);
   const closeDialog = () => setSelectedProduct(null);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
@@ -173,7 +180,18 @@ export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, on
                 {hasSearchFilters && <span className="muted"> ({matchingProducts.length})</span>}
               </h2>
             </div>
-            <a className="text-link" href="#/categories">See all categories <span aria-hidden="true">→</span></a>
+            <div className="section-heading-controls">
+              {hasSearchFilters && (
+                <label className="catalog-sort">Sort by
+                  <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
+                    <option value="recommended">Recommended</option>
+                    <option value="price-low">Price: low to high</option>
+                    <option value="price-high">Price: high to low</option>
+                  </select>
+                </label>
+              )}
+              <a className="text-link" href="#/categories">See all categories <span aria-hidden="true">→</span></a>
+            </div>
           </div>
           {hasSearchFilters && matchingProducts.length === 0 && (
             <p className="search-feedback" role="status">
@@ -181,7 +199,7 @@ export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, on
             </p>
           )}
           <div className="product-grid">
-            {matchingProducts.map(product => (
+            {sortedProducts.map(product => (
               <article className="product-card" key={product.id}>
                 <WishlistButton product={product} isSaved={wishlist.includes(String(product.id))} onToggle={onToggleWishlist} />
                 <a className="product-card-link" href={`#/category/${product.category}`}>
@@ -225,10 +243,7 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
     () => products.filter(product => product.category === categoryId && matchesProduct(product, term)),
     [categoryId, term]
   );
-  const sortedProducts = useMemo(() => {
-    if (sortOrder === "recommended") return categoryProducts;
-    return [...categoryProducts].sort((a, b) => sortOrder === "price-low" ? a.price - b.price : b.price - a.price);
-  }, [categoryProducts, sortOrder]);
+  const sortedProducts = useMemo(() => sortProducts(categoryProducts, sortOrder), [categoryProducts, sortOrder]);
   const closeDialog = () => setSelectedProduct(null);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
