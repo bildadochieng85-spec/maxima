@@ -208,7 +208,7 @@ export function CartPage({ cart, onChangeQuantity, onRemove, onClear }) {
           <div className="cart-lines">
             {cart.map(item => (
               <article className="cart-line" key={item.id}>
-                <img src={item.image} alt={item.name} />
+                <img src={item.image} alt={item.name} loading="lazy" decoding="async" />
                 <div className="cart-line-info">
                   <h2>{item.name}</h2>
                   <p>{formatPrice(item.price)}</p>
@@ -300,7 +300,7 @@ export function CheckoutPage({ cart, user }) {
           <h2>Order details</h2>
           {cart.length ? cart.map(item => (
             <div className="checkout-item" key={item.id}>
-              <img src={item.image} alt="" />
+              <img src={item.image} alt="" loading="lazy" decoding="async" />
               <div><strong>{item.name}</strong><small>{item.quantity} × {formatPrice(item.price)}</small></div>
               <strong>{formatPrice(item.price * item.quantity)}</strong>
             </div>
