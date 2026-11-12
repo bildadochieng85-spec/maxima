@@ -103,6 +103,7 @@
 .cart-summary .summary-total { color: var(--navy); font-size: 15px; }
 .cart-summary .button { width: 100%; margin-top: 10px; }
 .cart-summary .text-button { width: 100%; margin-top: 16px; }
+.cart-summary .continue-shopping { display: block; margin-top: 14px; color: var(--blue); font-size: 12px; font-weight: 700; text-align: center; }
 
 .checkout-container { max-width: 950px; }
 .checkout-columns { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 18px; }

@@ -233,6 +233,7 @@ export function CartPage({ cart, onChangeQuantity, onRemove, onClear }) {
             <p className="summary-total"><span>Total</span><strong>{formatPrice(total)}</strong></p>
             <a className="button button-primary" href="#/checkout">Proceed to checkout</a>
             <button type="button" className="text-button" onClick={onClear}>Clear cart</button>
+            <a className="continue-shopping" href="#/categories">Continue shopping</a>
           </aside>
         </div>
       ) : (
