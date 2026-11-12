@@ -249,7 +249,7 @@ export function CartPage({ cart, onChangeQuantity, onRemove, onClear }) {
                 </div>
                 <div className="cart-line-end">
                   <strong>{formatPrice(item.price * item.quantity)}</strong>
-                  <button type="button" className="remove-button" onClick={() => onRemove(item.id)}>Remove</button>
+                  <button type="button" className="remove-button" onClick={() => onRemove(item.id)} aria-label={`Remove ${item.name} from cart`}>Remove</button>
                 </div>
               </article>
             ))}
