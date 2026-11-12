@@ -195,6 +195,7 @@ export function HomePage({ query, searchCategory, onAdd }) {
 
 export function CategoryPage({ categoryId, query, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [sortOrder, setSortOrder] = useState("recommended");
   const returnFocusRef = useRef(null);
   const category = categories.find(item => item.id === categoryId);
   const term = query.trim().toLowerCase();
@@ -202,6 +203,10 @@ export function CategoryPage({ categoryId, query, onAdd }) {
     () => products.filter(product => product.category === categoryId && matchesProduct(product, term)),
     [categoryId, term]
   );
+  const sortedProducts = useMemo(() => {
+    if (sortOrder === "recommended") return categoryProducts;
+    return [...categoryProducts].sort((a, b) => sortOrder === "price-low" ? a.price - b.price : b.price - a.price);
+  }, [categoryProducts, sortOrder]);
   const closeDialog = () => setSelectedProduct(null);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
@@ -233,10 +238,17 @@ export function CategoryPage({ categoryId, query, onAdd }) {
         <div className="category-results">
           <div className="section-heading catalog-section-heading">
             <h2>{term ? "Search results" : "Products"} <span className="muted">({categoryProducts.length})</span></h2>
+            <label className="catalog-sort">Sort by
+              <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
+                <option value="recommended">Recommended</option>
+                <option value="price-low">Price: low to high</option>
+                <option value="price-high">Price: high to low</option>
+              </select>
+            </label>
           </div>
           {categoryProducts.length ? (
             <div className="store-product-grid">
-              {categoryProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} onAdd={onAdd} />)}
+              {sortedProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} onAdd={onAdd} />)}
             </div>
           ) : (
             <div className="empty-state">
