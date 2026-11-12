@@ -118,6 +118,7 @@ function App() {
 
   useEffect(() => {
     if (route === "/featured") document.getElementById("featured")?.scrollIntoView();
+    else window.scrollTo(0, 0);
   }, [route]);
 
   useEffect(() => {
