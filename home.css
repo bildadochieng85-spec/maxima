@@ -182,6 +182,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 .section-heading h2 { margin: 0; color: var(--navy); font-size: 29px; letter-spacing: -.04em; }
 .section-heading > p { max-width: 320px; margin: 0 0 3px; color: var(--muted); font-size: 12px; }
 .section-heading .text-link { margin-bottom: 5px; }
+.section-heading-controls { display: flex; align-items: center; gap: 16px; }
 
 .category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .category-card { min-width: 0; padding: 16px; display: grid; align-content: start; gap: 12px; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; background: #fff; }
@@ -286,6 +287,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
   .benefit-icon { width: 24px; text-align: center; }
   .section, .closing-banner { width: calc(100% - 32px); margin-top: 53px; }
   .section-heading { align-items: flex-start; }
+  .featured-section .section-heading { flex-wrap: wrap; }
+  .featured-section .section-heading-controls { width: 100%; justify-content: space-between; }
   .section-heading h2 { font-size: 25px; }
   .section-heading > p { max-width: 150px; font-size: 11px; text-align: right; }
   .category-grid, .product-grid { gap: 11px; }
