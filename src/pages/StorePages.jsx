@@ -162,6 +162,7 @@ export function HomePage({ query, onAdd }) {
                   <div className="product-info">
                     <span className="product-category">{product.category.toUpperCase()}</span>
                     <h3>{product.name}</h3>
+                    <strong className="product-price">{formatPrice(product.price)}</strong>
                     <span className="product-link">Shop now <span aria-hidden="true">→</span></span>
                   </div>
                 </a>

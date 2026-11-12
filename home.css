@@ -194,6 +194,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 .product-info { padding: 14px 14px 16px; }
 .product-category { color: #8b95a1; font-size: 9px; font-weight: 750; letter-spacing: .11em; }
 .product-info h3 { margin: 5px 0 13px; color: var(--navy); font-size: 15px; }
+.product-price { display: block; margin: -6px 0 11px; color: var(--ink); font-size: 16px; }
 .product-link { color: var(--blue); font-size: 11px; font-weight: 700; }
 .product-link span { margin-left: 5px; }
 .product-quick-view { width: calc(100% - 28px); margin: 0 14px 14px; padding: 8px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--blue); cursor: pointer; font-size: 11px; font-weight: 700; }
