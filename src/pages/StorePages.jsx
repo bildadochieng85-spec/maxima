@@ -70,12 +70,17 @@ function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
   );
 }
 
-export function HomePage({ query }) {
+export function HomePage({ query, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const returnFocusRef = useRef(null);
   const term = query.trim().toLowerCase();
   const matchingCategories = categories.filter(category => `${category.name} ${category.description}`.toLowerCase().includes(term));
   const matchingProducts = (term ? products : featuredProducts).filter(product => matchesProduct(product, term));
   const closeDialog = () => setSelectedProduct(null);
+  const openDialog = (product, trigger) => {
+    returnFocusRef.current = trigger;
+    setSelectedProduct(product);
+  };
 
   return (
     <>
@@ -139,17 +144,20 @@ export function HomePage({ query }) {
           )}
           <div className="product-grid">
             {matchingProducts.map(product => (
-              <a className="product-card" href={`#/category/${product.category}`} key={product.id}>
-                <div className="product-image">
-                  <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
-                  <span className="product-tag">{categories.find(category => category.id === product.category)?.name}</span>
-                </div>
-                <div className="product-info">
-                  <span className="product-category">{product.category.toUpperCase()}</span>
-                  <h3>{product.name}</h3>
-                  <span className="product-link">Shop now <span aria-hidden="true">→</span></span>
-                </div>
-              </a>
+              <article className="product-card" key={product.id}>
+                <a className="product-card-link" href={`#/category/${product.category}`}>
+                  <div className="product-image">
+                    <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
+                    <span className="product-tag">{categories.find(category => category.id === product.category)?.name}</span>
+                  </div>
+                  <div className="product-info">
+                    <span className="product-category">{product.category.toUpperCase()}</span>
+                    <h3>{product.name}</h3>
+                    <span className="product-link">Shop now <span aria-hidden="true">→</span></span>
+                  </div>
+                </a>
+                <button type="button" className="product-quick-view" onClick={event => openDialog(product, event.currentTarget)}>Quick view</button>
+              </article>
             ))}
           </div>
         </section>
@@ -159,7 +167,7 @@ export function HomePage({ query }) {
           <a className="button button-light" href="#/categories">Start exploring <span aria-hidden="true">→</span></a>
         </section>
       </main>
-      <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} />
+      <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
     </>
   );
 }

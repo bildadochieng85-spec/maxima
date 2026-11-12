@@ -132,7 +132,7 @@ function App() {
 
   let page;
   if (route === "/" || route === "/categories" || route === "/featured") {
-    page = <HomePage query={query} />;
+    page = <HomePage query={query} onAdd={addToCart} />;
   } else if (route.startsWith("/category/")) {
     page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} onAdd={addToCart} />;
   } else if (route === "/cart") {
