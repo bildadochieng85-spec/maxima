@@ -40,9 +40,11 @@ function ProductCard({ product, onView, onAdd, isSaved, onToggleWishlist }) {
   return (
     <article className="store-product-card">
       <WishlistButton product={product} isSaved={isSaved} onToggle={onToggleWishlist} />
-      <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
+      <a className="store-product-image-link" href={`#/product/${product.id}`}>
+        <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
+      </a>
       <div className="store-product-info">
-        <h3>{product.name}</h3>
+        <h3><a href={`#/product/${product.id}`}>{product.name}</a></h3>
         <p>{product.description}</p>
         <strong>{formatPrice(product.price)}</strong>
         <div className="store-product-actions">
@@ -202,7 +204,7 @@ export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, on
             {sortedProducts.map(product => (
               <article className="product-card" key={product.id}>
                 <WishlistButton product={product} isSaved={wishlist.includes(String(product.id))} onToggle={onToggleWishlist} />
-                <a className="product-card-link" href={`#/category/${product.category}`}>
+                <a className="product-card-link" href={`#/product/${product.id}`}>
                   <div className="product-image">
                     <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
                     <span className="product-tag">{categories.find(category => category.id === product.category)?.name}</span>
@@ -306,6 +308,52 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
         </div>
       </div>
       <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
+    </main>
+  );
+}
+
+export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
+  const product = products.find(item => String(item.id) === String(productId));
+  if (!product) {
+    return (
+      <main className="page-container empty-state">
+        <h1>Product not found</h1>
+        <p>This product may no longer be available.</p>
+        <a className="button button-primary" href="#/categories">Browse products</a>
+      </main>
+    );
+  }
+
+  const category = categories.find(item => item.id === product.category);
+  return (
+    <main className="page-container product-detail-page">
+      <nav className="breadcrumbs" aria-label="Breadcrumb">
+        <a href="#/categories">Shop all</a>
+        <span aria-hidden="true">/</span>
+        <a href={`#/category/${product.category}`}>{category?.name || "Products"}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{product.name}</span>
+      </nav>
+      <article className="product-detail-layout">
+        <div className="product-detail-image">
+          <WishlistButton
+            product={product}
+            isSaved={wishlist.includes(String(product.id))}
+            onToggle={onToggleWishlist}
+          />
+          <img src={product.image} alt={product.name} />
+        </div>
+        <section className="product-detail-summary">
+          <p className="eyebrow">{category?.name || "Maximall marketplace"}</p>
+          <h1>{product.name}</h1>
+          <p>{product.description}</p>
+          <strong className="product-detail-price">{formatPrice(product.price)}</strong>
+          <button type="button" className="button button-primary" onClick={() => onAdd(product)}>
+            Add to cart
+          </button>
+          <p className="product-detail-note">Convenient delivery across Kenya</p>
+        </section>
+      </article>
     </main>
   );
 }

@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase.js";
 import SiteShell from "./components/SiteShell.jsx";
-import { categories, formatPrice } from "./catalog.js";
-import { CartPage, CategoryPage, CheckoutPage, HomePage, PaymentPage, readCart, WishlistPage } from "./pages/StorePages.jsx";
+import { categories, formatPrice, products } from "./catalog.js";
+import { CartPage, CategoryPage, CheckoutPage, HomePage, PaymentPage, ProductPage, readCart, WishlistPage } from "./pages/StorePages.jsx";
 import { DashboardPage, LoginPage, SignupPage } from "./pages/AccountPages.jsx";
 
 function currentRoute() {
@@ -71,12 +71,17 @@ function App() {
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const cartSubtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const wishlistCount = wishlist.length;
+  const routeProduct = route.startsWith("/product/")
+    ? products.find(product => String(product.id) === route.slice("/product/".length))
+    : null;
   function submitSearch() {
     if (!["/", "/categories", "/featured"].includes(route)) window.location.hash = "#/";
   }
-  const routeTitle = route.startsWith("/category/")
-    ? categories.find(category => category.id === route.slice("/category/".length))?.name || "Category not found"
-    : ({
+  const routeTitle = route.startsWith("/product/")
+    ? routeProduct?.name || "Product not found"
+    : route.startsWith("/category/")
+      ? categories.find(category => category.id === route.slice("/category/".length))?.name || "Category not found"
+      : ({
       "/": "Your everyday marketplace",
       "/categories": "Shop all",
       "/featured": "Popular picks",
@@ -173,6 +178,8 @@ function App() {
   let page;
   if (route === "/" || route === "/categories" || route === "/featured") {
     page = <HomePage query={query} searchCategory={searchCategory} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
+  } else if (route.startsWith("/product/")) {
+    page = <ProductPage productId={route.slice("/product/".length)} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route.startsWith("/category/")) {
     page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route === "/wishlist") {

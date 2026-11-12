@@ -1,6 +1,6 @@
 # Maximall
 
-The storefront includes product search and department filters, saved items, a cart, checkout, payment simulation, sign-in, signup, and an account dashboard.
+The storefront includes product search and department filters, product detail pages, saved items, a cart, checkout, payment simulation, sign-in, signup, and an account dashboard.
 
 ## Run locally
 
