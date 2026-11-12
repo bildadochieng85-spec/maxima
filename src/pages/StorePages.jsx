@@ -209,7 +209,7 @@ export function CartPage({ cart, onChangeQuantity, onRemove, onClear }) {
                   <h2>{item.name}</h2>
                   <p>{formatPrice(item.price)}</p>
                   <div className="quantity-control">
-                    <button type="button" aria-label={`Decrease ${item.name} quantity`} onClick={() => onChangeQuantity(item.id, -1)}>−</button>
+                    <button type="button" aria-label={`Decrease ${item.name} quantity`} onClick={() => onChangeQuantity(item.id, -1)} disabled={item.quantity <= 1}>−</button>
                     <span>{item.quantity}</span>
                     <button type="button" aria-label={`Increase ${item.name} quantity`} onClick={() => onChangeQuantity(item.id, 1)}>+</button>
                   </div>
