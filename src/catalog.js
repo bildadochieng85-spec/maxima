@@ -150,6 +150,22 @@ export const products = [
     price: 40000,
     image: "img/bed.jpeg",
   },
+  {
+    id: "301",
+    category: "fashion",
+    name: "Women's Casual Jacket",
+    description: "A lightweight neutral jacket for everyday outfits.",
+    price: 3800,
+    image: "img/wshirt.jpeg",
+  },
+  {
+    id: "302",
+    category: "fashion",
+    name: "Classic Plaid Shirt",
+    description: "A comfortable button-up shirt with a classic plaid pattern.",
+    price: 2400,
+    image: "img/clothers.jpeg",
+  },
 ];
 
 export const featuredProducts = [
