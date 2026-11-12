@@ -313,7 +313,15 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
 }
 
 export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const returnFocusRef = useRef(null);
   const product = products.find(item => String(item.id) === String(productId));
+  const openDialog = (item, trigger) => {
+    returnFocusRef.current = trigger;
+    setSelectedProduct(item);
+  };
+  const closeDialog = () => setSelectedProduct(null);
+
   if (!product) {
     return (
       <main className="page-container empty-state">
@@ -325,6 +333,9 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
   }
 
   const category = categories.find(item => item.id === product.category);
+  const relatedProducts = products
+    .filter(item => item.category === product.category && item.id !== product.id)
+    .slice(0, 4);
   return (
     <main className="page-container product-detail-page">
       <nav className="breadcrumbs" aria-label="Breadcrumb">
@@ -354,6 +365,29 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
           <p className="product-detail-note">Convenient delivery across Kenya</p>
         </section>
       </article>
+      {relatedProducts.length > 0 && (
+        <section className="product-related" aria-labelledby="related-products-heading">
+          <h2 id="related-products-heading">You may also like</h2>
+          <div className="store-product-grid">
+            {relatedProducts.map(item => (
+              <ProductCard
+                key={item.id}
+                product={item}
+                onView={openDialog}
+                onAdd={onAdd}
+                isSaved={wishlist.includes(String(item.id))}
+                onToggleWishlist={onToggleWishlist}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+      <ProductDialog
+        product={selectedProduct}
+        onClose={closeDialog}
+        onAdd={item => { onAdd(item); closeDialog(); }}
+        returnFocusRef={returnFocusRef}
+      />
     </main>
   );
 }

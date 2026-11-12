@@ -68,6 +68,8 @@
 .product-detail-summary .product-detail-price { color: var(--navy); font-size: 24px; }
 .product-detail-summary > .button { min-width: 190px; }
 .product-detail-summary .product-detail-note { font-size: 12px; }
+.product-related { margin-top: 40px; }
+.product-related > h2 { margin: 0 0 16px; color: var(--navy); font-size: 23px; }
 
 .product-dialog-backdrop {
   position: fixed;
