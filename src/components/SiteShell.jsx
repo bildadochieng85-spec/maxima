@@ -62,7 +62,7 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
         </div>
         <nav className="category-nav" aria-label="Main navigation">
           <a href="#/categories" aria-current={route === "/categories" ? "page" : undefined}>☰ Shop all</a>
-          <a href="#/featured" aria-current={route === "/featured" ? "page" : undefined}>Today's deals</a>
+          <a href="#/featured" aria-current={route === "/featured" ? "page" : undefined}>Popular picks</a>
           <a href="#/category/electronics" aria-current={route === "/category/electronics" ? "page" : undefined}>Electronics</a>
           <a href="#/category/kitchen" aria-current={route === "/category/kitchen" ? "page" : undefined}>Kitchen</a>
           <a href="#/category/bedroom" aria-current={route === "/category/bedroom" ? "page" : undefined}>Home &amp; bedroom</a>
