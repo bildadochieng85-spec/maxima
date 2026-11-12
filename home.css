@@ -50,7 +50,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 
 .announcement span { padding: 0 8px; color: var(--orange); }
 
-.site-header { background: var(--navy); }
+.site-header { background: var(--navy); box-shadow: 0 2px 6px #102b5312; }
 
 .header-main {
   width: min(var(--content), calc(100% - 48px));
@@ -101,7 +101,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
   background: #193963;
 }
 
-.site-header { box-shadow: 0 2px 6px #102b5312; }
 .category-nav a { color: #fff; font-size: 12px; font-weight: 650; transition: color .18s ease; }
 .category-nav a:hover { color: #ffd5bd; }
 .footer-links a:hover { color: var(--orange); }
