@@ -90,6 +90,7 @@ export function HomePage({ query, searchCategory, onAdd }) {
     (searchCategory === "all" || category.id === searchCategory) &&
     `${category.name} ${category.description}`.toLowerCase().includes(term)
   );
+  const hasSearchFilters = Boolean(term) || searchCategory !== "all";
   const productList = term || searchCategory !== "all" ? products : featuredProducts;
   const matchingProducts = productList.filter(product =>
     (searchCategory === "all" || product.category === searchCategory) && matchesProduct(product, term)
@@ -151,13 +152,18 @@ export function HomePage({ query, searchCategory, onAdd }) {
         <section className="section featured-section" id="featured">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">{term ? "Products across the catalog" : "Worth a closer look"}</p>
-              <h2>{term ? "Search results" : "Popular picks"}</h2>
+              <p className="eyebrow">{hasSearchFilters ? "Catalog results" : "Worth a closer look"}</p>
+              <h2>
+                {hasSearchFilters ? "Search results" : "Popular picks"}
+                {hasSearchFilters && <span className="muted"> ({matchingProducts.length})</span>}
+              </h2>
             </div>
             <a className="text-link" href="#/categories">See all categories <span aria-hidden="true">→</span></a>
           </div>
-          {term && matchingCategories.length === 0 && matchingProducts.length === 0 && (
-            <p className="search-feedback" role="status">No matches for “{query.trim()}”. Try another search or browse the categories.</p>
+          {hasSearchFilters && matchingProducts.length === 0 && (
+            <p className="search-feedback" role="status">
+              No products found{term && ` for “${query.trim()}”`}. Try another search or department.
+            </p>
           )}
           <div className="product-grid">
             {matchingProducts.map(product => (
