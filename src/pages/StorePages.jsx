@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { categories, featuredProducts, formatPrice, products } from "../catalog.js";
 import { db } from "../firebase.js";

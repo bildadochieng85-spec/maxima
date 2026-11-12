@@ -1,3 +1,4 @@
+import React from "react";
 import { categories, formatPrice } from "../catalog.js";
 
 export function Brand({ footer = false }) {
