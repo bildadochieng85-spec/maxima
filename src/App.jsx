@@ -31,6 +31,16 @@ function getRouteSearch() {
   return hashParts[1] || window.location.search.slice(1);
 }
 
+function addProductToCart(cartItems, product, quantity) {
+  const existing = cartItems.find(item => String(item.id) === String(product.id));
+  if (existing) {
+    return cartItems.map(item => item === existing
+      ? { ...item, quantity: item.quantity + quantity, qty: item.quantity + quantity }
+      : item);
+  }
+  return [...cartItems, { ...product, id: String(product.id), price: Number(product.price), quantity, qty: quantity }];
+}
+
 function readWishlist() {
   try {
     const saved = JSON.parse(localStorage.getItem("wishlist") || "[]");
@@ -187,16 +197,18 @@ function App() {
   }, []);
 
   function addToCart(product, quantity = 1) {
-    setCart(current => {
-      const existing = current.find(item => String(item.id) === String(product.id));
-      if (existing) {
-        return current.map(item => item === existing
-          ? { ...item, quantity: item.quantity + quantity, qty: item.quantity + quantity }
-          : item);
-      }
-      return [...current, { ...product, id: String(product.id), price: Number(product.price), quantity, qty: quantity }];
-    });
-    setCartNotice(`${quantity > 1 ? `${quantity} × ` : ""}${product.name} added to your cart.`);
+    setCart(current => addProductToCart(current, product, quantity));
+    showCartNotice(`${quantity > 1 ? `${quantity} × ` : ""}${product.name} added to your cart.`);
+  }
+
+  function addSavedItemsToCart(savedProducts) {
+    setCart(current => savedProducts.reduce((items, product) => addProductToCart(items, product, 1), current));
+    const itemCount = savedProducts.length;
+    showCartNotice(`${itemCount} saved ${itemCount === 1 ? "item" : "items"} added to your cart.`);
+  }
+
+  function showCartNotice(message) {
+    setCartNotice(message);
     if (cartNoticeTimer.current !== null) window.clearTimeout(cartNoticeTimer.current);
     cartNoticeTimer.current = window.setTimeout(() => {
       setCartNotice("");
@@ -256,7 +268,7 @@ function App() {
   } else if (route.startsWith("/category/")) {
     page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route === "/wishlist") {
-    page = <WishlistPage wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
+    page = <WishlistPage wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} onAddAll={addSavedItemsToCart} />;
   } else if (route === "/cart") {
     page = <CartPage cart={cart} onChangeQuantity={changeQuantity} onRemove={removeFromCart} onSaveForLater={saveForLater} onClear={clearCart} />;
   } else if (route === "/checkout") {

@@ -511,7 +511,7 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
   );
 }
 
-export function WishlistPage({ wishlist, onToggleWishlist, onAdd }) {
+export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sortOrder, setSortOrder] = useState("recommended");
   const returnFocusRef = useRef(null);
@@ -527,14 +527,19 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd }) {
     <main className="page-container">
       <div className="wishlist-heading">
         <h1>Saved items <span className="muted">({savedProducts.length})</span></h1>
-        {savedProducts.length > 1 && (
-          <label className="catalog-sort">Sort by
-            <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
-              <option value="recommended">Recommended</option>
-              <option value="price-low">Price: low to high</option>
-              <option value="price-high">Price: high to low</option>
-            </select>
-          </label>
+        {savedProducts.length > 0 && (
+          <div className="wishlist-actions">
+            <button type="button" className="button button-primary" onClick={() => onAddAll(savedProducts)}>Add all to cart</button>
+            {savedProducts.length > 1 && (
+              <label className="catalog-sort">Sort by
+                <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
+                  <option value="recommended">Recommended</option>
+                  <option value="price-low">Price: low to high</option>
+                  <option value="price-high">Price: high to low</option>
+                </select>
+              </label>
+            )}
+          </div>
         )}
       </div>
       {savedProducts.length ? (
