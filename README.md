@@ -1,6 +1,6 @@
 # Maximall
 
-The storefront homepage uses React and Vite. Existing category, account, cart, and checkout pages remain static HTML during this incremental migration.
+The storefront, product categories, cart, checkout, payment simulation, sign-in, signup, and account dashboard are rendered by React.
 
 ## Run locally
 
@@ -18,4 +18,4 @@ npm run build
 npm run preview
 ```
 
-The Vite build copies the existing static pages and their assets into `dist` so their current links continue to work.
+The Vite build copies the product images into `dist`. Client-side navigation uses hash routes, so direct links and browser history work without additional server rewrite rules.
