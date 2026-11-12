@@ -41,20 +41,20 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 
 .announcement {
   padding: 8px 20px;
-  background: var(--navy);
-  color: #fff;
+  background: #f0eee7;
+  color: var(--navy);
   text-align: center;
   font-size: 12px;
   letter-spacing: .04em;
 }
 
-.announcement span { padding: 0 8px; color: #f3a176; }
+.announcement span { padding: 0 8px; color: var(--orange); }
 
-.site-header { background: #fff; border-bottom: 1px solid var(--line); }
+.site-header { background: var(--navy); }
 
 .header-main {
   width: min(var(--content), calc(100% - 48px));
-  min-height: 86px;
+  min-height: 76px;
   margin: auto;
   display: flex;
   align-items: center;
@@ -64,43 +64,47 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 
 .brand { display: inline-flex; align-items: center; gap: 10px; flex: 0 0 auto; }
 .brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
-.brand > span { color: var(--navy); font-size: 23px; font-weight: 800; letter-spacing: -.06em; line-height: 1; }
-.brand small { display: block; margin-top: 5px; color: var(--muted); font-size: 8px; font-weight: 700; letter-spacing: .12em; }
+.brand > span { color: #fff; font-size: 23px; font-weight: 800; letter-spacing: -.06em; line-height: 1; }
+.brand small { display: block; margin-top: 5px; color: #d3dce8; font-size: 8px; font-weight: 700; letter-spacing: .12em; }
 
 .search {
   flex: 1;
-  max-width: 500px;
+  max-width: 650px;
+  min-height: 44px;
   display: flex;
   padding: 4px;
-  border: 1px solid #dfe3e8;
-  border-radius: 7px;
-  background: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: #fff;
 }
 
-.search:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px #2874a91a; }
+.search:focus-within { border-color: var(--orange); box-shadow: 0 0 0 3px #e9784240; }
 .search input { width: 100%; min-width: 0; padding: 9px 12px; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 13px; }
 .search input::placeholder { color: #8993a2; }
 .search-clear { padding: 8px 10px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 700; }
 .search-clear:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; background: #edf1f6; color: var(--navy); }
-.search button { padding: 8px 18px; border: 0; border-radius: 5px; background: var(--navy); color: #fff; cursor: pointer; font-size: 12px; font-weight: 700; }
-.search button:hover { background: var(--blue); }
+.search button[type="submit"] { padding: 8px 18px; border: 0; border-radius: 4px; background: var(--orange); color: #fff; cursor: pointer; font-size: 12px; font-weight: 700; }
+.search button[type="submit"]:hover { background: #cf6132; }
 .search-clear:hover { background: #edf1f6; color: var(--navy); }
 
 .header-actions { display: flex; align-items: center; gap: 22px; white-space: nowrap; }
-.account-link, .cart-link { color: var(--ink); font-size: 13px; font-weight: 650; }
+.account-link, .cart-link { color: #fff; font-size: 13px; font-weight: 650; }
 .account-link span, .cart-link > span:first-child { margin-right: 5px; font-size: 16px; }
 .cart-count { display: inline-grid; min-width: 21px; height: 21px; margin-left: 4px; padding: 0 5px; place-items: center; border-radius: 50px; background: var(--orange); color: white; font-size: 11px; }
 
 .category-nav {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  width: 100%;
   gap: clamp(24px, 5vw, 66px);
-  padding: 12px 24px;
-  border-top: 1px solid #f1f1ef;
+  padding: 11px max(24px, calc((100% - var(--content)) / 2));
+  background: #193963;
 }
 
-.category-nav a { color: #536176; font-size: 12px; font-weight: 650; transition: color .18s ease; }
-.category-nav a:hover, .footer-links a:hover { color: var(--orange); }
+.site-header { box-shadow: 0 2px 6px #102b5312; }
+.category-nav a { color: #fff; font-size: 12px; font-weight: 650; transition: color .18s ease; }
+.category-nav a:hover { color: #ffd5bd; }
+.footer-links a:hover { color: var(--orange); }
 
 .hero {
   position: relative;
@@ -246,7 +250,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
   .search { grid-column: 1 / -1; grid-row: 2; max-width: none; }
   .search input { padding: 8px 9px; font-size: 12px; }
   .search button { padding: 7px 13px; }
-  .category-nav { justify-content: flex-start; gap: 23px; overflow-x: auto; padding: 11px 16px; white-space: nowrap; }
+  .category-nav { width: 100%; gap: 23px; overflow-x: auto; padding: 11px 16px; white-space: nowrap; }
   .category-nav a { font-size: 11px; }
   .hero { width: calc(100% - 24px); margin-top: 14px; padding: 34px 25px 20px; grid-template-columns: 1fr; }
   .hero h1 { font-size: clamp(39px, 12vw, 55px); }
