@@ -174,7 +174,7 @@ export const featuredProducts = [
   products.find(product => product.id === "201"),
   products.find(product => product.id === "102"),
   products.find(product => product.id === "2"),
-  products.find(product => product.id === "202"),
+  products.find(product => product.id === "301"),
   products.find(product => product.id === "103"),
   products.find(product => product.id === "3"),
 ];
