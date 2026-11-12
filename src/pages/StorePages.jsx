@@ -598,7 +598,39 @@ export function readCart() {
   }
 }
 
-export function CartPage({ cart, onChangeQuantity, onRemove, onSaveForLater, onClear }) {
+function CartQuantityInput({ item, onSetQuantity }) {
+  const [draft, setDraft] = useState(String(item.quantity));
+
+  useEffect(() => {
+    setDraft(String(item.quantity));
+  }, [item.quantity]);
+
+  function commitQuantity() {
+    const quantity = Number(draft);
+    if (Number.isSafeInteger(quantity) && quantity > 0) onSetQuantity(item.id, quantity);
+    else setDraft(String(item.quantity));
+  }
+
+  return (
+    <input
+      type="number"
+      min="1"
+      step="1"
+      value={draft}
+      aria-label={`Quantity for ${item.name}`}
+      onChange={event => setDraft(event.target.value)}
+      onBlur={commitQuantity}
+      onKeyDown={event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          event.currentTarget.blur();
+        }
+      }}
+    />
+  );
+}
+
+export function CartPage({ cart, onChangeQuantity, onSetQuantity, onRemove, onSaveForLater, onClear }) {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
@@ -615,7 +647,7 @@ export function CartPage({ cart, onChangeQuantity, onRemove, onSaveForLater, onC
                   <p>{formatPrice(item.price)}</p>
                   <div className="quantity-control">
                     <button type="button" aria-label={`Decrease ${item.name} quantity`} onClick={() => onChangeQuantity(item.id, -1)} disabled={item.quantity <= 1}>−</button>
-                    <span>{item.quantity}</span>
+                    <CartQuantityInput item={item} onSetQuantity={onSetQuantity} />
                     <button type="button" aria-label={`Increase ${item.name} quantity`} onClick={() => onChangeQuantity(item.id, 1)}>+</button>
                   </div>
                 </div>

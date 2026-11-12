@@ -237,6 +237,12 @@ function App() {
     }));
   }
 
+  function setQuantity(id, quantity) {
+    setCart(current => current.map(item => item.id === String(id)
+      ? { ...item, quantity, qty: quantity }
+      : item));
+  }
+
   function removeFromCart(id) {
     setCart(current => current.filter(item => item.id !== String(id)));
   }
@@ -270,7 +276,7 @@ function App() {
   } else if (route === "/wishlist") {
     page = <WishlistPage wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} onAddAll={addSavedItemsToCart} />;
   } else if (route === "/cart") {
-    page = <CartPage cart={cart} onChangeQuantity={changeQuantity} onRemove={removeFromCart} onSaveForLater={saveForLater} onClear={clearCart} />;
+    page = <CartPage cart={cart} onChangeQuantity={changeQuantity} onSetQuantity={setQuantity} onRemove={removeFromCart} onSaveForLater={saveForLater} onClear={clearCart} />;
   } else if (route === "/checkout") {
     page = <CheckoutPage cart={cart} user={user} />;
   } else if (route === "/mpesa") {
