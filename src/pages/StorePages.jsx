@@ -531,6 +531,8 @@ export function PaymentPage({ search }) {
             onChange={event => setPhone(event.target.value)}
             placeholder="2547XXXXXXXX"
             inputMode="tel"
+            pattern="(?:\\+?254|0)7\\d{8}"
+            title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX"
             aria-invalid={!phone || !isValidKenyanPhone(phone)}
           />
         </label>
