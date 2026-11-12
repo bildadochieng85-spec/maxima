@@ -50,7 +50,8 @@ export function HomePage({ query }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const term = query.trim().toLowerCase();
   const matchingCategories = categories.filter(category => `${category.name} ${category.description}`.toLowerCase().includes(term));
-  const matchingProducts = featuredProducts.filter(product => `${product.name} ${product.description}`.toLowerCase().includes(term));
+  const matchingProducts = (term ? products : featuredProducts)
+    .filter(product => `${product.name} ${product.description}`.toLowerCase().includes(term));
   const closeDialog = () => setSelectedProduct(null);
 
   return (
@@ -104,7 +105,10 @@ export function HomePage({ query }) {
 
         <section className="section featured-section" id="featured">
           <div className="section-heading">
-            <div><p className="eyebrow">Worth a closer look</p><h2>Popular picks</h2></div>
+            <div>
+              <p className="eyebrow">{term ? "Products across the catalog" : "Worth a closer look"}</p>
+              <h2>{term ? "Search results" : "Popular picks"}</h2>
+            </div>
             <a className="text-link" href="#/categories">See all categories <span aria-hidden="true">→</span></a>
           </div>
           {term && matchingCategories.length === 0 && matchingProducts.length === 0 && (
