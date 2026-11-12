@@ -25,6 +25,7 @@ body {
 a { color: inherit; text-decoration: none; }
 button, input { font: inherit; }
 img { display: block; max-width: 100%; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
 
 .sr-only {
   position: absolute;
