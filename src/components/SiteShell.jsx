@@ -29,6 +29,11 @@ export default function SiteShell({ children, cartCount, onSearch, query, user }
               value={query}
               onChange={event => onSearch(event.target.value)}
             />
+            {query && (
+              <button type="button" className="search-clear" onClick={() => onSearch("")} aria-label="Clear search">
+                Clear
+              </button>
+            )}
             <button type="submit" aria-label="Search">Search</button>
           </form>
           <div className="header-actions">
