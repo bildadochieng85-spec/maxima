@@ -221,20 +221,32 @@ export function CategoryPage({ categoryId, query, onAdd }) {
         <img src={category.image} alt="" />
         <div><p className="eyebrow">Explore the collection</p><h1>{category.name}</h1><p>{category.description}</p></div>
       </div>
-      <div className="section-heading catalog-section-heading">
-        <h2>{term ? "Search results" : "Products"} <span className="muted">({categoryProducts.length})</span></h2>
+      <div className="category-catalog-layout">
+        <aside className="category-sidebar" aria-label="Shop by department">
+          <h2>Departments</h2>
+          {categories.map(item => (
+            <a href={`#/category/${item.id}`} key={item.id} aria-current={item.id === categoryId ? "page" : undefined}>
+              {item.name}
+            </a>
+          ))}
+        </aside>
+        <div className="category-results">
+          <div className="section-heading catalog-section-heading">
+            <h2>{term ? "Search results" : "Products"} <span className="muted">({categoryProducts.length})</span></h2>
+          </div>
+          {categoryProducts.length ? (
+            <div className="store-product-grid">
+              {categoryProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} onAdd={onAdd} />)}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <h2>{term ? "No matching products" : "New finds are on the way"}</h2>
+              <p>{term ? "Try a different search term." : "This collection does not have any listed products yet."}</p>
+              <a className="button button-primary" href="#/categories">Browse other categories</a>
+            </div>
+          )}
+        </div>
       </div>
-      {categoryProducts.length ? (
-        <div className="store-product-grid">
-          {categoryProducts.map(product => <ProductCard key={product.id} product={product} onView={openDialog} onAdd={onAdd} />)}
-        </div>
-      ) : (
-        <div className="empty-state">
-          <h2>{term ? "No matching products" : "New finds are on the way"}</h2>
-          <p>{term ? "Try a different search term." : "This collection does not have any listed products yet."}</p>
-          <a className="button button-primary" href="#/categories">Browse other categories</a>
-        </div>
-      )}
       <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
     </main>
   );
