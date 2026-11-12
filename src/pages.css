@@ -36,7 +36,7 @@
 .catalog-section-heading h2 { margin: 0; color: var(--navy); font-size: 23px; }
 .store-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
 .store-product-card { overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-.store-product-card > img { width: 100%; height: 180px; object-fit: cover; background: #eee; }
+.store-product-card > img { width: 100%; height: 180px; padding: 10px; object-fit: contain; background: #f8f9fa; }
 .store-product-info { padding: 15px; display: grid; gap: 8px; }
 .store-product-info h3 { margin: 0; color: var(--navy); font-size: 17px; }
 .store-product-info p { min-height: 40px; margin: 0; color: var(--muted); font-size: 12px; }
