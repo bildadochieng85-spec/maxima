@@ -73,6 +73,8 @@
 .product-purchase-buttons .button { min-width: 0; padding: 0 10px; white-space: nowrap; }
 .product-detail-total { margin: 0; color: var(--muted); font-size: 13px; }
 .product-detail-total strong { margin-left: 4px; color: var(--navy); }
+.product-share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.product-share > p { margin: 0; color: var(--muted); font-size: 12px; }
 .product-detail-summary .product-detail-note { font-size: 12px; }
 .product-related { margin-top: 40px; }
 .product-related > h2 { margin: 0 0 16px; color: var(--navy); font-size: 23px; }

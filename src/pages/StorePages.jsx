@@ -340,6 +340,7 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
 export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBuyNow }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState("1");
+  const [shareStatus, setShareStatus] = useState("");
   const returnFocusRef = useRef(null);
   const requestedQuantity = Number(quantity);
   const isValidQuantity = Number.isInteger(requestedQuantity) && requestedQuantity > 0;
@@ -349,6 +350,10 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
     setSelectedProduct(item);
   };
   const closeDialog = () => setSelectedProduct(null);
+
+  useEffect(() => {
+    setShareStatus("");
+  }, [productId]);
 
   if (!product) {
     return (
@@ -364,6 +369,20 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
   const relatedProducts = products
     .filter(item => item.category === product.category && item.id !== product.id)
     .slice(0, 4);
+  async function copyProductLink() {
+    if (!navigator.clipboard?.writeText) {
+      setShareStatus("Copying links is not supported by this browser.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareStatus("Product link copied.");
+    } catch (error) {
+      console.error("Could not copy the product link.", error);
+      setShareStatus("Could not copy the link. Copy it from your browser address bar.");
+    }
+  }
+
   return (
     <main className="page-container product-detail-page">
       <nav className="breadcrumbs" aria-label="Breadcrumb">
@@ -413,6 +432,10 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
               Items total ({requestedQuantity}): <strong>{formatPrice(product.price * requestedQuantity)}</strong>
             </p>
           )}
+          <div className="product-share">
+            <button type="button" className="text-button" onClick={copyProductLink}>Copy product link</button>
+            {shareStatus && <p role="status">{shareStatus}</p>}
+          </div>
           <p className="product-detail-note">Convenient delivery across Kenya</p>
         </section>
       </article>
