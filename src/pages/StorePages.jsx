@@ -37,7 +37,7 @@ function ProductDialog({ product, onClose, onAdd }) {
   return (
     <div className="product-dialog-backdrop" onMouseDown={event => event.target === event.currentTarget && onClose()}>
       <section className="product-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-product-name">
-        <button type="button" className="dialog-close" onClick={onClose} aria-label="Close product details">×</button>
+        <button type="button" className="dialog-close" onClick={onClose} aria-label="Close product details" autoFocus>×</button>
         <img src={product.image} alt={product.name} />
         <div>
           <p className="eyebrow">{categories.find(category => category.id === product.category)?.name}</p>
