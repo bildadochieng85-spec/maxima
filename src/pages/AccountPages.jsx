@@ -265,8 +265,8 @@ export function DashboardPage({ user, loading }) {
             <button type="button" className="text-button" onClick={changeEmail}>Edit email</button>
             <form className="account-form compact-form" onSubmit={saveProfile}>
               <h3>Contact information</h3>
-              <label>Phone<input value={profile.phone} onChange={event => setProfile(current => ({ ...current, phone: event.target.value }))} /></label>
-              <label>WhatsApp<input value={profile.whatsapp} onChange={event => setProfile(current => ({ ...current, whatsapp: event.target.value }))} /></label>
+              <label>Phone<input type="tel" autoComplete="tel" value={profile.phone} onChange={event => setProfile(current => ({ ...current, phone: event.target.value }))} /></label>
+              <label>WhatsApp<input type="tel" autoComplete="tel" value={profile.whatsapp} onChange={event => setProfile(current => ({ ...current, whatsapp: event.target.value }))} /></label>
               {profileMessage && <p className="muted" role="status">{profileMessage}</p>}
               <button type="submit" className="button button-primary">Save contact info</button>
             </form>
