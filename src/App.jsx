@@ -184,6 +184,14 @@ function App() {
     setCart(current => current.filter(item => item.id !== String(id)));
   }
 
+  function saveForLater(id) {
+    const productId = String(id);
+    if (products.some(product => String(product.id) === productId)) {
+      setWishlist(current => current.includes(productId) ? current : [...current, productId]);
+    }
+    removeFromCart(productId);
+  }
+
   function toggleWishlist(id) {
     const productId = String(id);
     setWishlist(current => current.includes(productId)
@@ -205,7 +213,7 @@ function App() {
   } else if (route === "/wishlist") {
     page = <WishlistPage wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route === "/cart") {
-    page = <CartPage cart={cart} onChangeQuantity={changeQuantity} onRemove={removeFromCart} onClear={clearCart} />;
+    page = <CartPage cart={cart} onChangeQuantity={changeQuantity} onRemove={removeFromCart} onSaveForLater={saveForLater} onClear={clearCart} />;
   } else if (route === "/checkout") {
     page = <CheckoutPage cart={cart} user={user} />;
   } else if (route === "/mpesa") {

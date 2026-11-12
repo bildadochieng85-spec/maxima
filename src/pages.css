@@ -127,7 +127,7 @@
 .quantity-control button:disabled { color: #a4adba; cursor: not-allowed; }
 .quantity-control span { min-width: 30px; color: var(--ink); font-size: 13px; text-align: center; }
 .cart-line-end { display: grid; justify-items: end; gap: 13px; color: var(--navy); font-size: 13px; }
-.remove-button, .text-button { padding: 0; border: 0; background: transparent; color: var(--blue); cursor: pointer; font-size: 12px; font-weight: 700; }
+.remove-button, .save-for-later, .text-button { padding: 0; border: 0; background: transparent; color: var(--blue); cursor: pointer; font-size: 12px; font-weight: 700; }
 .cart-summary { position: sticky; top: 20px; }
 .cart-summary h2, .checkout-card h2 { margin: 0 0 15px; color: var(--navy); font-size: 19px; }
 .cart-summary > p, .checkout-total { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 12px; }

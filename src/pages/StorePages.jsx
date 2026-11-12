@@ -461,7 +461,7 @@ export function readCart() {
   }
 }
 
-export function CartPage({ cart, onChangeQuantity, onRemove, onClear }) {
+export function CartPage({ cart, onChangeQuantity, onRemove, onSaveForLater, onClear }) {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
@@ -484,6 +484,11 @@ export function CartPage({ cart, onChangeQuantity, onRemove, onClear }) {
                 </div>
                 <div className="cart-line-end">
                   <strong>{formatPrice(item.price * item.quantity)}</strong>
+                  {products.some(product => String(product.id) === item.id) && (
+                    <button type="button" className="save-for-later" onClick={() => onSaveForLater(item.id)}>
+                      Save for later
+                    </button>
+                  )}
                   <button type="button" className="remove-button" onClick={() => onRemove(item.id)} aria-label={`Remove ${item.name} from cart`}>Remove</button>
                 </div>
               </article>
