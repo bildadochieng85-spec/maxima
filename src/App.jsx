@@ -168,6 +168,7 @@ function App() {
       onSearchCategory={setSearchCategory}
       onSearchSubmit={submitSearch}
       query={query}
+      route={route}
       searchCategory={searchCategory}
       user={user}
     >

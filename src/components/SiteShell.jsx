@@ -12,7 +12,7 @@ export function Brand({ footer = false }) {
   );
 }
 
-export default function SiteShell({ children, cartCount, cartSubtotal, onSearch, onSearchCategory, onSearchSubmit, query, searchCategory, user }) {
+export default function SiteShell({ children, cartCount, cartSubtotal, onSearch, onSearchCategory, onSearchSubmit, query, route, searchCategory, user }) {
   return (
     <>
       <div className="announcement">
@@ -61,12 +61,12 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
           </div>
         </div>
         <nav className="category-nav" aria-label="Main navigation">
-          <a href="#/categories">☰ Shop all</a>
-          <a href="#/featured">Today's deals</a>
-          <a href="#/category/electronics">Electronics</a>
-          <a href="#/category/kitchen">Kitchen</a>
-          <a href="#/category/bedroom">Home &amp; bedroom</a>
-          <a href="#/category/fashion">Fashion</a>
+          <a href="#/categories" aria-current={route === "/categories" ? "page" : undefined}>☰ Shop all</a>
+          <a href="#/featured" aria-current={route === "/featured" ? "page" : undefined}>Today's deals</a>
+          <a href="#/category/electronics" aria-current={route === "/category/electronics" ? "page" : undefined}>Electronics</a>
+          <a href="#/category/kitchen" aria-current={route === "/category/kitchen" ? "page" : undefined}>Kitchen</a>
+          <a href="#/category/bedroom" aria-current={route === "/category/bedroom" ? "page" : undefined}>Home &amp; bedroom</a>
+          <a href="#/category/fashion" aria-current={route === "/category/fashion" ? "page" : undefined}>Fashion</a>
         </nav>
       </header>
       {children}
