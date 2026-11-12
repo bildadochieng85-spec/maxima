@@ -6,7 +6,7 @@ import { db } from "../firebase.js";
 function ProductCard({ product, onView }) {
   return (
     <article className="store-product-card">
-      <img src={product.image} alt={product.name} />
+      <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
       <div className="store-product-info">
         <h3>{product.name}</h3>
         <p>{product.description}</p>
@@ -118,7 +118,7 @@ export function HomePage({ query }) {
             {matchingProducts.map(product => (
               <a className="product-card" href={`#/category/${product.category}`} key={product.id}>
                 <div className="product-image">
-                  <img src={product.image} alt={product.name} />
+                  <img src={product.image} alt={product.name} loading="lazy" decoding="async" />
                   <span className="product-tag">{categories.find(category => category.id === product.category)?.name}</span>
                 </div>
                 <div className="product-info">
@@ -464,7 +464,7 @@ export function PaymentPage({ search }) {
         </div>
         <p className="checkout-total"><span>Total</span><strong>{formatPrice(total)}</strong></p>
         <label className="payment-phone">M-Pesa phone
-          <input value={phone} onChange={event => setPhone(event.target.value)} placeholder="2547XXXXXXXX" inputMode="tel" />
+          <input type="tel" autoComplete="tel" value={phone} onChange={event => setPhone(event.target.value)} placeholder="2547XXXXXXXX" inputMode="tel" />
         </label>
         {error && <p className="form-error" role="alert">{error}</p>}
         {paymentStatus && <p className={receiptNo ? "form-success" : "form-error"} role="status">{paymentStatus}</p>}
