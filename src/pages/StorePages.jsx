@@ -333,7 +333,7 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
   );
 }
 
-export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
+export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBuyNow }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState("1");
   const returnFocusRef = useRef(null);
@@ -395,9 +395,14 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd }) {
                 onChange={event => setQuantity(event.target.value)}
               />
             </label>
-            <button type="button" className="button button-primary" disabled={!isValidQuantity} onClick={() => onAdd(product, requestedQuantity)}>
-              Add to cart
-            </button>
+            <div className="product-purchase-buttons">
+              <button type="button" className="button button-primary" disabled={!isValidQuantity} onClick={() => onAdd(product, requestedQuantity)}>
+                Add to cart
+              </button>
+              <button type="button" className="button button-light" disabled={!isValidQuantity} onClick={() => onBuyNow(product, requestedQuantity)}>
+                Buy now
+              </button>
+            </div>
           </div>
           <p className="product-detail-note">Convenient delivery across Kenya</p>
         </section>

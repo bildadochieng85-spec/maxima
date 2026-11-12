@@ -196,6 +196,11 @@ function App() {
     }, 3000);
   }
 
+  function buyNow(product, quantity = 1) {
+    addToCart(product, quantity);
+    window.location.hash = "#/checkout";
+  }
+
   function dismissCartNotice() {
     if (cartNoticeTimer.current !== null) {
       window.clearTimeout(cartNoticeTimer.current);
@@ -239,7 +244,7 @@ function App() {
   if (route === "/" || route === "/categories" || route === "/featured") {
     page = <HomePage query={query} searchCategory={searchCategory} wishlist={wishlist} recentlyViewed={recentlyViewed} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route.startsWith("/product/")) {
-    page = <ProductPage productId={route.slice("/product/".length)} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
+    page = <ProductPage productId={route.slice("/product/".length)} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} onBuyNow={buyNow} />;
   } else if (route.startsWith("/category/")) {
     page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route === "/wishlist") {
@@ -274,7 +279,7 @@ function App() {
       user={user}
     >
       {authError && <p className="global-error" role="alert">Sign-in status could not be checked: {authError}</p>}
-      {cartNotice && (
+      {cartNotice && route !== "/checkout" && (
         <div className="cart-notice" role="status" aria-live="polite" aria-atomic="true">
           <span>{cartNotice}</span>
           <a href="#/cart">View cart</a>
