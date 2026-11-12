@@ -524,7 +524,15 @@ export function PaymentPage({ search }) {
         </div>
         <p className="checkout-total"><span>Total</span><strong>{formatPrice(total)}</strong></p>
         <label className="payment-phone">M-Pesa phone
-          <input type="tel" autoComplete="tel" value={phone} onChange={event => setPhone(event.target.value)} placeholder="2547XXXXXXXX" inputMode="tel" />
+          <input
+            type="tel"
+            autoComplete="tel"
+            value={phone}
+            onChange={event => setPhone(event.target.value)}
+            placeholder="2547XXXXXXXX"
+            inputMode="tel"
+            aria-invalid={!phone || !isValidKenyanPhone(phone)}
+          />
         </label>
         {error && <p className="form-error" role="alert">{error}</p>}
         {paymentStatus && <p className={receiptNo ? "form-success" : "form-error"} role="status">{paymentStatus}</p>}
