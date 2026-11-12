@@ -679,6 +679,12 @@ export function PaymentPage({ search, onPaymentSuccess }) {
     return () => { active = false; };
   }, [checkoutId, docId]);
 
+  useEffect(() => {
+    if (phone) return;
+    const checkoutPhone = order?.customer?.phone || order?.customerPhone || order?.phone;
+    if (checkoutPhone) setPhone(String(checkoutPhone));
+  }, [order, phone]);
+
   function draw(event) {
     const canvas = canvasRef.current;
     if (!canvas) return;
