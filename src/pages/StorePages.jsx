@@ -3,6 +3,11 @@ import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { categories, featuredProducts, formatPrice, products } from "../catalog.js";
 import { db } from "../firebase.js";
 
+function matchesProduct(product, term) {
+  const categoryName = categories.find(category => category.id === product.category)?.name || "";
+  return `${product.name} ${product.description} ${categoryName}`.toLowerCase().includes(term);
+}
+
 function ProductCard({ product, onView }) {
   return (
     <article className="store-product-card">
@@ -50,8 +55,7 @@ export function HomePage({ query }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const term = query.trim().toLowerCase();
   const matchingCategories = categories.filter(category => `${category.name} ${category.description}`.toLowerCase().includes(term));
-  const matchingProducts = (term ? products : featuredProducts)
-    .filter(product => `${product.name} ${product.description}`.toLowerCase().includes(term));
+  const matchingProducts = (term ? products : featuredProducts).filter(product => matchesProduct(product, term));
   const closeDialog = () => setSelectedProduct(null);
 
   return (
@@ -146,7 +150,7 @@ export function CategoryPage({ categoryId, query, onAdd }) {
   const category = categories.find(item => item.id === categoryId);
   const term = query.trim().toLowerCase();
   const categoryProducts = useMemo(
-    () => products.filter(product => product.category === categoryId && `${product.name} ${product.description}`.toLowerCase().includes(term)),
+    () => products.filter(product => product.category === categoryId && matchesProduct(product, term)),
     [categoryId, term]
   );
   const closeDialog = () => setSelectedProduct(null);
