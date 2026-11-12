@@ -19,6 +19,10 @@ export default function SiteShell({ children, cartCount, onSearch, query, user }
       <header className="site-header">
         <div className="header-main">
           <Brand />
+          <div className="delivery-location">
+            <span>Deliver to</span>
+            <strong><span aria-hidden="true">⌖</span> Kenya</strong>
+          </div>
           <form className="search" role="search" onSubmit={event => event.preventDefault()}>
             <label className="sr-only" htmlFor="search-input">Search products and categories</label>
             <input
@@ -46,7 +50,8 @@ export default function SiteShell({ children, cartCount, onSearch, query, user }
           </div>
         </div>
         <nav className="category-nav" aria-label="Main navigation">
-          <a href="#/categories">Shop all</a>
+          <a href="#/categories">☰ Shop all</a>
+          <a href="#/featured">Today's deals</a>
           <a href="#/category/electronics">Electronics</a>
           <a href="#/category/kitchen">Kitchen</a>
           <a href="#/category/bedroom">Home &amp; bedroom</a>

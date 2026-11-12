@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { categories, featuredProducts, formatPrice, products } from "../catalog.js";
+import { categories, formatPrice, products } from "../catalog.js";
 import { db } from "../firebase.js";
 
 function matchesProduct(product, term) {
@@ -84,7 +84,7 @@ export function HomePage({ query, onAdd }) {
   const returnFocusRef = useRef(null);
   const term = query.trim().toLowerCase();
   const matchingCategories = categories.filter(category => `${category.name} ${category.description}`.toLowerCase().includes(term));
-  const matchingProducts = (term ? products : featuredProducts).filter(product => matchesProduct(product, term));
+  const matchingProducts = (term ? products : products.slice(0, 8)).filter(product => matchesProduct(product, term));
   const closeDialog = () => setSelectedProduct(null);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
