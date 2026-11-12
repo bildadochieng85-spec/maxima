@@ -383,6 +383,26 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
     }
   }
 
+  async function shareProduct() {
+    setShareStatus("");
+    if (!navigator.share) {
+      await copyProductLink();
+      return;
+    }
+    try {
+      await navigator.share({
+        title: product.name,
+        text: product.description,
+        url: window.location.href,
+      });
+      setShareStatus("Product shared.");
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+      console.error("Could not share the product.", error);
+      setShareStatus("Could not share the product. Copy its link instead.");
+    }
+  }
+
   return (
     <main className="page-container product-detail-page">
       <nav className="breadcrumbs" aria-label="Breadcrumb">
@@ -433,6 +453,7 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
             </p>
           )}
           <div className="product-share">
+            <button type="button" className="text-button" onClick={shareProduct}>Share product</button>
             <button type="button" className="text-button" onClick={copyProductLink}>Copy product link</button>
             {shareStatus && <p role="status">{shareStatus}</p>}
           </div>
