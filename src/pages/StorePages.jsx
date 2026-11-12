@@ -16,7 +16,7 @@ function ProductCard({ product, onView }) {
         <h3>{product.name}</h3>
         <p>{product.description}</p>
         <strong>{formatPrice(product.price)}</strong>
-        <button type="button" className="button button-primary" onClick={event => onView(product, event.currentTarget)}>View product</button>
+        <button type="button" className="button button-primary" onClick={event => onView(product, event.currentTarget)} aria-label={`View ${product.name} details`}>View product</button>
       </div>
     </article>
   );
@@ -156,7 +156,7 @@ export function HomePage({ query, onAdd }) {
                     <span className="product-link">Shop now <span aria-hidden="true">→</span></span>
                   </div>
                 </a>
-                <button type="button" className="product-quick-view" onClick={event => openDialog(product, event.currentTarget)}>Quick view</button>
+                <button type="button" className="product-quick-view" onClick={event => openDialog(product, event.currentTarget)} aria-label={`Quick view ${product.name}`}>Quick view</button>
               </article>
             ))}
           </div>
