@@ -159,6 +159,11 @@ export function CategoryPage({ categoryId, query, onAdd }) {
 
   return (
     <main className="page-container">
+      <nav className="breadcrumbs" aria-label="Breadcrumb">
+        <a href="#/categories">Shop all</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{category.name}</span>
+      </nav>
       <div className="catalog-heading">
         <img src={category.image} alt="" />
         <div><p className="eyebrow">Explore the collection</p><h1>{category.name}</h1><p>{category.description}</p></div>

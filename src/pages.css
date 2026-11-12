@@ -25,6 +25,7 @@
   border-radius: 9px;
   background: #f0eee7;
 }
+.breadcrumbs { margin-bottom: 12px; display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 12px; }
 
 .catalog-heading > img { width: 250px; height: 185px; object-fit: cover; }
 .catalog-heading > div { padding: 20px; }
