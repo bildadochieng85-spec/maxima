@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { categories, formatPrice } from "../catalog.js";
 
 export function Brand({ footer = false }) {
@@ -14,6 +14,22 @@ export function Brand({ footer = false }) {
 }
 
 export default function SiteShell({ children, cartCount, cartSubtotal, onSearch, onSearchCategory, onSearchSubmit, query, route, searchCategory, user, wishlistCount }) {
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    function focusSearch(event) {
+      if (event.key !== "/" || event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = event.target;
+      if (target instanceof HTMLElement && (target.isContentEditable || target.matches("input, textarea, select"))) return;
+      event.preventDefault();
+      searchInputRef.current?.focus();
+      searchInputRef.current?.select();
+    }
+
+    window.addEventListener("keydown", focusSearch);
+    return () => window.removeEventListener("keydown", focusSearch);
+  }, []);
+
   return (
     <>
       <div className="announcement">
@@ -35,8 +51,11 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
             <label className="sr-only" htmlFor="search-input">Search products and categories</label>
             <input
               id="search-input"
+              ref={searchInputRef}
               type="search"
               placeholder="What are you looking for?"
+              title="Press / to focus search"
+              aria-keyshortcuts="/"
               autoComplete="off"
               value={query}
               onChange={event => onSearch(event.target.value)}
