@@ -182,7 +182,7 @@ function App() {
   } else if (route === "/checkout") {
     page = <CheckoutPage cart={cart} user={user} />;
   } else if (route === "/mpesa") {
-    page = <PaymentPage search={routeParams} />;
+    page = <PaymentPage search={routeParams} onPaymentSuccess={() => setCart([])} />;
   } else if (route === "/login") {
     page = <LoginPage />;
   } else if (route === "/signup") {

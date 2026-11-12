@@ -477,7 +477,7 @@ export function CheckoutPage({ cart, user }) {
   );
 }
 
-export function PaymentPage({ search }) {
+export function PaymentPage({ search, onPaymentSuccess }) {
   const [order, setOrder] = useState(null);
   const [isLocalOrder, setIsLocalOrder] = useState(true);
   const [error, setError] = useState("");
@@ -596,6 +596,7 @@ export function PaymentPage({ search }) {
     } catch (storageError) {
       console.error("Could not update the saved order status.", storageError);
     }
+    onPaymentSuccess();
   }
 
   if (error && !order) {
