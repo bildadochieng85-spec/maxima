@@ -22,6 +22,10 @@ function isValidKenyanPhone(phone) {
   return /^(?:\+?254|0)7\d{8}$/.test(normalized);
 }
 
+function DeliveryCostNote() {
+  return <p className="delivery-cost-note">Delivery costs are calculated separately and are not included in this item subtotal.</p>;
+}
+
 function WishlistButton({ product, isSaved, onToggle }) {
   return (
     <button
@@ -527,10 +531,10 @@ export function CartPage({ cart, onChangeQuantity, onRemove, onSaveForLater, onC
           </div>
           <aside className="cart-summary">
             <h2>Order summary</h2>
-            <p><span>Subtotal</span><strong>{formatPrice(total)}</strong></p>
-            <p><span>Delivery</span><span>Calculated at delivery</span></p>
+            <p><span>Delivery</span><span>Calculated separately</span></p>
             <hr />
-            <p className="summary-total"><span>Total</span><strong>{formatPrice(total)}</strong></p>
+            <p className="summary-total"><span>Items subtotal</span><strong>{formatPrice(total)}</strong></p>
+            <DeliveryCostNote />
             <a className="button button-primary" href="#/checkout">Proceed to checkout</a>
             <button type="button" className="text-button" onClick={onClear}>Clear cart</button>
             <a className="continue-shopping" href="#/categories">Continue shopping</a>
@@ -592,7 +596,7 @@ export function CheckoutPage({ cart, user }) {
     const message = [
       "New order",
       ...cart.map(item => `${item.name} (${item.quantity}) - KES ${item.price * item.quantity}`),
-      `Total: KES ${total}`,
+      `Items subtotal (delivery calculated separately): KES ${total}`,
     ].join("\n");
     window.open(`https://wa.me/254117345789?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   }
@@ -610,7 +614,8 @@ export function CheckoutPage({ cart, user }) {
               <strong>{formatPrice(item.price * item.quantity)}</strong>
             </div>
           )) : <p className="muted">Your cart is empty. <a href="#/categories">Shop now</a></p>}
-          <p className="checkout-total"><span>Total</span><strong>{formatPrice(total)}</strong></p>
+          <p className="checkout-total"><span>Items subtotal</span><strong>{formatPrice(total)}</strong></p>
+          <DeliveryCostNote />
         </section>
         <form className="checkout-card customer-form" onSubmit={placeOrder}>
           <h2>Customer details</h2>
@@ -762,7 +767,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
   const customerName = order.customer?.name || order.customerName || "Guest";
   const items = Array.isArray(order.items) ? order.items : [];
   const total = Number(order.total) || 0;
-  const whatsAppMessage = `MAXIMA STORES\nOrder: ${order.checkoutId}\nTotal: KES ${total}\nStatus: PAID`;
+  const whatsAppMessage = `MAXIMA STORES\nOrder: ${order.checkoutId}\nItems subtotal (delivery calculated separately): KES ${total}\nStatus: PAID`;
 
   return (
     <main className="page-container payment-container">
@@ -783,7 +788,8 @@ export function PaymentPage({ search, onPaymentSuccess }) {
             );
           })}
         </div>
-        <p className="checkout-total"><span>Total</span><strong>{formatPrice(total)}</strong></p>
+        <p className="checkout-total"><span>Items subtotal</span><strong>{formatPrice(total)}</strong></p>
+        <DeliveryCostNote />
         <label className="payment-phone">M-Pesa phone
           <input
             type="tel"
@@ -822,7 +828,8 @@ export function PaymentPage({ search, onPaymentSuccess }) {
               return <p className="receipt-line" key={`${item.name}-${index}`}><span>{item.name} × {quantity}</span><strong>{formatPrice(Number(item.price) * quantity)}</strong></p>;
             })}
             <hr />
-            <p className="receipt-line"><strong>Total paid</strong><strong>{formatPrice(total)}</strong></p>
+            <p className="receipt-line"><strong>Items total paid</strong><strong>{formatPrice(total)}</strong></p>
+            <DeliveryCostNote />
             {signature && <img className="signature-preview" src={signature} alt="Customer signature" />}
             <div className="payment-actions no-print">
               <button type="button" className="button button-primary" onClick={() => window.print()}>Print / PDF</button>
