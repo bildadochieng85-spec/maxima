@@ -43,6 +43,21 @@ function readWishlist() {
   }
 }
 
+function readRecentlyViewed() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("recentlyViewed") || "[]");
+    const productIds = new Set(products.map(product => String(product.id)));
+    return Array.isArray(saved)
+      ? [...new Set(saved.filter(id => typeof id === "string" || typeof id === "number").map(String))]
+        .filter(id => productIds.has(id))
+        .slice(0, 8)
+      : [];
+  } catch (error) {
+    console.error("Could not read recently viewed products.", error);
+    return [];
+  }
+}
+
 function useRoute() {
   const [route, setRoute] = useState(currentRoute);
   useEffect(() => {
@@ -63,6 +78,7 @@ function App() {
   const [searchCategory, setSearchCategory] = useState("all");
   const [cart, setCart] = useState(readCart);
   const [wishlist, setWishlist] = useState(readWishlist);
+  const [recentlyViewed, setRecentlyViewed] = useState(readRecentlyViewed);
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
@@ -105,6 +121,13 @@ function App() {
   }, [route]);
 
   useEffect(() => {
+    if (!route.startsWith("/product/")) return;
+    const productId = route.slice("/product/".length);
+    if (!products.some(product => String(product.id) === productId)) return;
+    setRecentlyViewed(current => [productId, ...current.filter(id => id !== productId)].slice(0, 8));
+  }, [route]);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser);
       setAuthLoading(false);
@@ -134,9 +157,18 @@ function App() {
   }, [wishlist]);
 
   useEffect(() => {
+    try {
+      localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
+    } catch (error) {
+      console.error("Could not save recently viewed products.", error);
+    }
+  }, [recentlyViewed]);
+
+  useEffect(() => {
     function syncStoreData(event) {
       if (event.key === "cart") setCart(readCart());
       if (event.key === "wishlist") setWishlist(readWishlist());
+      if (event.key === "recentlyViewed") setRecentlyViewed(readRecentlyViewed());
     }
     window.addEventListener("storage", syncStoreData);
     return () => window.removeEventListener("storage", syncStoreData);
@@ -205,7 +237,7 @@ function App() {
 
   let page;
   if (route === "/" || route === "/categories" || route === "/featured") {
-    page = <HomePage query={query} searchCategory={searchCategory} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
+    page = <HomePage query={query} searchCategory={searchCategory} wishlist={wishlist} recentlyViewed={recentlyViewed} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route.startsWith("/product/")) {
     page = <ProductPage productId={route.slice("/product/".length)} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route.startsWith("/category/")) {

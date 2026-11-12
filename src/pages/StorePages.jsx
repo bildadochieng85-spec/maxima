@@ -104,7 +104,7 @@ function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
   );
 }
 
-export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, onAdd }) {
+export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [], onToggleWishlist, onAdd }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sortOrder, setSortOrder] = useState("recommended");
   const returnFocusRef = useRef(null);
@@ -119,6 +119,9 @@ export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, on
     (searchCategory === "all" || product.category === searchCategory) && matchesProduct(product, term)
   );
   const sortedProducts = sortProducts(matchingProducts, sortOrder);
+  const recentlyViewedProducts = recentlyViewed
+    .map(id => products.find(product => String(product.id) === String(id)))
+    .filter(Boolean);
   const closeDialog = () => setSelectedProduct(null);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
@@ -224,6 +227,24 @@ export function HomePage({ query, searchCategory, wishlist, onToggleWishlist, on
             ))}
           </div>
         </section>
+
+        {recentlyViewedProducts.length > 0 && (
+          <section className="section product-related" aria-labelledby="recently-viewed-heading">
+            <h2 id="recently-viewed-heading">Recently viewed</h2>
+            <div className="store-product-grid">
+              {recentlyViewedProducts.map(product => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onView={openDialog}
+                  onAdd={onAdd}
+                  isSaved={wishlist.includes(String(product.id))}
+                  onToggleWishlist={onToggleWishlist}
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="closing-banner">
           <div><p className="eyebrow">Your next great find is waiting</p><h2>Good things are closer than you think.</h2></div>
