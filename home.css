@@ -81,6 +81,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 .search input { width: 100%; min-width: 0; padding: 9px 12px; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 13px; }
 .search input::placeholder { color: #8993a2; }
 .search-clear { padding: 8px 10px; border: 0; border-radius: 5px; background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 700; }
+.search-clear:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; background: #edf1f6; color: var(--navy); }
 .search button { padding: 8px 18px; border: 0; border-radius: 5px; background: var(--navy); color: #fff; cursor: pointer; font-size: 12px; font-weight: 700; }
 .search button:hover { background: var(--blue); }
 .search-clear:hover { background: #edf1f6; color: var(--navy); }
