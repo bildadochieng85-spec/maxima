@@ -36,7 +36,7 @@ export default function SiteShell({ children, cartCount, onSearch, query, user }
               <span aria-hidden="true">♙</span> {user ? "My account" : "Sign in"}
             </a>
             <a className="cart-link" href="#/cart">
-              <span aria-hidden="true">🛒</span> Cart <span className="cart-count">{cartCount}</span>
+              <span aria-hidden="true">🛒</span> Cart <span className="cart-count" aria-live="polite" aria-atomic="true">{cartCount}</span>
             </a>
           </div>
         </div>
