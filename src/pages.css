@@ -71,6 +71,8 @@
 .product-quantity-field input { width: 82px; min-height: 42px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 5px; background: #fff; color: var(--ink); font: inherit; }
 .product-purchase-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .product-purchase-buttons .button { min-width: 0; padding: 0 10px; white-space: nowrap; }
+.product-detail-total { margin: 0; color: var(--muted); font-size: 13px; }
+.product-detail-total strong { margin-left: 4px; color: var(--navy); }
 .product-detail-summary .product-detail-note { font-size: 12px; }
 .product-related { margin-top: 40px; }
 .product-related > h2 { margin: 0 0 16px; color: var(--navy); font-size: 23px; }

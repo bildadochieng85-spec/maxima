@@ -404,6 +404,11 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
               </button>
             </div>
           </div>
+          {isValidQuantity && (
+            <p className="product-detail-total" aria-live="polite">
+              Items total ({requestedQuantity}): <strong>{formatPrice(product.price * requestedQuantity)}</strong>
+            </p>
+          )}
           <p className="product-detail-note">Convenient delivery across Kenya</p>
         </section>
       </article>
