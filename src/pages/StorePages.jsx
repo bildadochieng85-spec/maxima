@@ -514,9 +514,11 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
 export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sortOrder, setSortOrder] = useState("recommended");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const returnFocusRef = useRef(null);
   const savedProducts = products.filter(product => wishlist.includes(String(product.id)));
-  const sortedSavedProducts = sortProducts(savedProducts, sortOrder);
+  const filteredSavedProducts = savedProducts.filter(product => categoryFilter === "all" || product.category === categoryFilter);
+  const sortedSavedProducts = sortProducts(filteredSavedProducts, sortOrder);
   const openDialog = (product, trigger) => {
     returnFocusRef.current = trigger;
     setSelectedProduct(product);
@@ -526,11 +528,19 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll }) {
   return (
     <main className="page-container">
       <div className="wishlist-heading">
-        <h1>Saved items <span className="muted">({savedProducts.length})</span></h1>
+        <h1>Saved items <span className="muted">({categoryFilter === "all" ? savedProducts.length : `${filteredSavedProducts.length} of ${savedProducts.length}`})</span></h1>
         {savedProducts.length > 0 && (
           <div className="wishlist-actions">
             <button type="button" className="button button-primary" onClick={() => onAddAll(savedProducts)}>Add all to cart</button>
             {savedProducts.length > 1 && (
+              <label className="catalog-sort">Department
+                <select value={categoryFilter} onChange={event => setCategoryFilter(event.target.value)}>
+                  <option value="all">All departments</option>
+                  {categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>)}
+                </select>
+              </label>
+            )}
+            {filteredSavedProducts.length > 1 && (
               <label className="catalog-sort">Sort by
                 <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
                   <option value="recommended">Recommended</option>
@@ -542,7 +552,7 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll }) {
           </div>
         )}
       </div>
-      {savedProducts.length ? (
+      {savedProducts.length ? (filteredSavedProducts.length ? (
         <div className="store-product-grid">
           {sortedSavedProducts.map(product => (
             <ProductCard
@@ -555,6 +565,12 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll }) {
             />
           ))}
         </div>
+      ) : (
+        <div className="empty-state">
+          <h2>No saved items in this department</h2>
+          <button type="button" className="button button-primary" onClick={() => setCategoryFilter("all")}>Show all saved items</button>
+        </div>
+      )
       ) : (
         <div className="empty-state">
           <h2>No saved items yet</h2>
