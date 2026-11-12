@@ -1,4 +1,4 @@
-import { categories } from "../catalog.js";
+import { categories, formatPrice } from "../catalog.js";
 
 export function Brand({ footer = false }) {
   return (
@@ -12,7 +12,7 @@ export function Brand({ footer = false }) {
   );
 }
 
-export default function SiteShell({ children, cartCount, onSearch, onSearchCategory, onSearchSubmit, query, searchCategory, user }) {
+export default function SiteShell({ children, cartCount, cartSubtotal, onSearch, onSearchCategory, onSearchSubmit, query, searchCategory, user }) {
   return (
     <>
       <div className="announcement">
@@ -51,8 +51,12 @@ export default function SiteShell({ children, cartCount, onSearch, onSearchCateg
             <a className="account-link" href={user ? "#/dashboard" : "#/login"}>
               <span aria-hidden="true">♙</span> {user ? "My account" : "Sign in"}
             </a>
-            <a className="cart-link" href="#/cart" aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}>
-              <span aria-hidden="true">🛒</span> Cart <span className="cart-count" aria-live="polite" aria-atomic="true">{cartCount}</span>
+            <a className="cart-link" href="#/cart" aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}${cartCount ? `, subtotal ${formatPrice(cartSubtotal)}` : ""}`}>
+              <span className="cart-icon" aria-hidden="true">🛒</span>
+              <span className="cart-details">
+                <span>Cart <span className="cart-count" aria-live="polite" aria-atomic="true">{cartCount}</span></span>
+                {cartCount > 0 && <small className="cart-subtotal">Subtotal {formatPrice(cartSubtotal)}</small>}
+              </span>
             </a>
           </div>
         </div>

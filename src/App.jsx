@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase.js";
 import SiteShell from "./components/SiteShell.jsx";
-import { categories } from "./catalog.js";
+import { categories, formatPrice } from "./catalog.js";
 import { CartPage, CategoryPage, CheckoutPage, HomePage, PaymentPage, readCart } from "./pages/StorePages.jsx";
 import { DashboardPage, LoginPage, SignupPage } from "./pages/AccountPages.jsx";
 
@@ -56,6 +56,7 @@ function App() {
   const routeSearch = getRouteSearch();
   const routeParams = useMemo(() => new URLSearchParams(routeSearch), [routeSearch]);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const cartSubtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   function submitSearch() {
     if (!["/", "/categories", "/featured"].includes(route)) window.location.hash = "#/";
   }
@@ -158,6 +159,7 @@ function App() {
   return (
     <SiteShell
       cartCount={cartCount}
+      cartSubtotal={cartSubtotal}
       onSearch={setQuery}
       onSearchCategory={setSearchCategory}
       onSearchSubmit={submitSearch}

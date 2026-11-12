@@ -92,7 +92,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
 
 .header-actions { display: flex; align-items: center; gap: 22px; white-space: nowrap; }
 .account-link, .cart-link { color: #fff; font-size: 13px; font-weight: 650; }
-.account-link span, .cart-link > span:first-child { margin-right: 5px; font-size: 16px; }
+.account-link span { margin-right: 5px; font-size: 16px; }
+.cart-link { display: inline-flex; align-items: center; gap: 5px; }
+.cart-icon { font-size: 18px; }
+.cart-details { display: grid; gap: 2px; }
+.cart-subtotal { color: #d3dce8; font-size: 9px; font-weight: 500; }
 .cart-count { display: inline-grid; min-width: 21px; height: 21px; margin-left: 4px; padding: 0 5px; place-items: center; border-radius: 50px; background: var(--orange); color: white; font-size: 11px; }
 
 .category-nav {
@@ -252,6 +256,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outlin
   .brand > span { font-size: 19px; }
   .header-actions { gap: 13px; }
   .account-link, .cart-link { font-size: 11px; }
+  .cart-subtotal { display: none; }
   .search { grid-column: 1 / -1; grid-row: 2; max-width: none; }
   .search-category { max-width: 105px; padding: 0 5px; font-size: 10px; }
   .search input { padding: 8px 9px; font-size: 12px; }
