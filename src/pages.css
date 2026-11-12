@@ -135,6 +135,8 @@
 .quantity-control button:disabled { color: #a4adba; cursor: not-allowed; }
 .quantity-control input { width: 60px; height: 30px; padding: 0 3px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; text-align: center; }
 .quantity-control input:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; border-radius: 3px; }
+.cart-quantity-field { position: relative; }
+.cart-quantity-error { position: absolute; z-index: 2; top: calc(100% + 4px); left: 0; width: max-content; max-width: 220px; padding: 5px 7px; border-radius: 4px; background: #fff0f0; color: #a12622; font-size: 11px; }
 .cart-line-end { display: grid; justify-items: end; gap: 13px; color: var(--navy); font-size: 13px; }
 .remove-button, .save-for-later, .text-button { padding: 0; border: 0; background: transparent; color: var(--blue); cursor: pointer; font-size: 12px; font-weight: 700; }
 .cart-summary { position: sticky; top: 20px; }

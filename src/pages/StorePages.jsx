@@ -600,33 +600,48 @@ export function readCart() {
 
 function CartQuantityInput({ item, onSetQuantity }) {
   const [draft, setDraft] = useState(String(item.quantity));
+  const [error, setError] = useState("");
+  const errorId = `cart-quantity-error-${item.id}`;
 
   useEffect(() => {
     setDraft(String(item.quantity));
+    setError("");
   }, [item.quantity]);
 
   function commitQuantity() {
     const quantity = Number(draft);
-    if (Number.isSafeInteger(quantity) && quantity > 0) onSetQuantity(item.id, quantity);
-    else setDraft(String(item.quantity));
+    if (Number.isSafeInteger(quantity) && quantity > 0) {
+      setError("");
+      if (quantity !== item.quantity) onSetQuantity(item.id, quantity);
+    } else {
+      setError("Enter a whole quantity of 1 or more.");
+    }
   }
 
   return (
-    <input
-      type="number"
-      min="1"
-      step="1"
-      value={draft}
-      aria-label={`Quantity for ${item.name}`}
-      onChange={event => setDraft(event.target.value)}
-      onBlur={commitQuantity}
-      onKeyDown={event => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          event.currentTarget.blur();
-        }
-      }}
-    />
+    <div className="cart-quantity-field">
+      <input
+        type="number"
+        min="1"
+        step="1"
+        value={draft}
+        aria-label={`Quantity for ${item.name}`}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
+        onChange={event => {
+          setDraft(event.target.value);
+          setError("");
+        }}
+        onBlur={commitQuantity}
+        onKeyDown={event => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            event.currentTarget.blur();
+          }
+        }}
+      />
+      {error && <small id={errorId} className="cart-quantity-error" role="alert">{error}</small>}
+    </div>
   );
 }
 
