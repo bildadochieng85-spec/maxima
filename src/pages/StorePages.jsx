@@ -511,12 +511,16 @@ export function ProductPage({ productId, wishlist, onToggleWishlist, onAdd, onBu
   );
 }
 
-export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll }) {
+export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll, recentlyViewed = [] }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sortOrder, setSortOrder] = useState("recommended");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const returnFocusRef = useRef(null);
   const savedProducts = products.filter(product => wishlist.includes(String(product.id)));
+  const recentlyViewedProducts = recentlyViewed
+    .map(id => products.find(product => String(product.id) === String(id)))
+    .filter(Boolean);
+  const recommendations = (recentlyViewedProducts.length ? recentlyViewedProducts : featuredProducts).slice(0, 4);
   const filteredSavedProducts = savedProducts.filter(product => categoryFilter === "all" || product.category === categoryFilter);
   const sortedSavedProducts = sortProducts(filteredSavedProducts, sortOrder);
   const openDialog = (product, trigger) => {
@@ -577,6 +581,23 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll }) {
           <p>Save products you like and they’ll be waiting here.</p>
           <a className="button button-primary" href="#/categories">Browse products</a>
         </div>
+      )}
+      {!savedProducts.length && (
+        <section className="product-related" aria-labelledby="wishlist-recommendations-heading">
+          <h2 id="wishlist-recommendations-heading">{recentlyViewedProducts.length ? "Pick up where you left off" : "Popular picks to get started"}</h2>
+          <div className="store-product-grid">
+            {recommendations.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onView={openDialog}
+                onAdd={onAdd}
+                isSaved={false}
+                onToggleWishlist={onToggleWishlist}
+              />
+            ))}
+          </div>
+        </section>
       )}
       <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
     </main>

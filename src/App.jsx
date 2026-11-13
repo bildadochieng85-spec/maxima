@@ -291,7 +291,7 @@ function App() {
   } else if (route.startsWith("/category/")) {
     page = <CategoryPage categoryId={route.slice("/category/".length)} query={query} wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} />;
   } else if (route === "/wishlist") {
-    page = <WishlistPage wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} onAddAll={addSavedItemsToCart} />;
+    page = <WishlistPage wishlist={wishlist} onToggleWishlist={toggleWishlist} onAdd={addToCart} onAddAll={addSavedItemsToCart} recentlyViewed={recentlyViewed} />;
   } else if (route === "/cart") {
     page = <CartPage cart={cart} onChangeQuantity={changeQuantity} onSetQuantity={setQuantity} onRemove={removeFromCart} onSaveForLater={saveForLater} onClear={clearCart} onAdd={addToCart} recentlyViewed={recentlyViewed} wishlist={wishlist} onToggleWishlist={toggleWishlist} />;
   } else if (route === "/checkout") {
