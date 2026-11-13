@@ -10,6 +10,7 @@ function matchesProduct(product, term) {
 function sortProducts(productList, sortOrder) {
   if (sortOrder === "recommended") return productList;
   if (sortOrder === "name") return [...productList].sort((a, b) => a.name.localeCompare(b.name));
+  if (sortOrder === "name-desc") return [...productList].sort((a, b) => b.name.localeCompare(a.name));
   return [...productList].sort((a, b) => sortOrder === "price-low" ? a.price - b.price : b.price - a.price);
 }
 
@@ -220,6 +221,7 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
                   <option value="price-low">Price: low to high</option>
                   <option value="price-high">Price: high to low</option>
                   <option value="name">Name: A to Z</option>
+                  <option value="name-desc">Name: Z to A</option>
                 </select>
               </label>
               <a className="text-link" href="#/categories">See all categories <span aria-hidden="true">→</span></a>
@@ -344,6 +346,7 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
                 <option value="price-low">Price: low to high</option>
                 <option value="price-high">Price: high to low</option>
                 <option value="name">Name: A to Z</option>
+                <option value="name-desc">Name: Z to A</option>
               </select>
             </label>
           </div>
@@ -564,6 +567,7 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll, rece
                   <option value="price-low">Price: low to high</option>
                   <option value="price-high">Price: high to low</option>
                   <option value="name">Name: A to Z</option>
+                  <option value="name-desc">Name: Z to A</option>
                 </select>
               </label>
             )}
