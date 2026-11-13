@@ -173,7 +173,7 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
             <div className="hero-art" aria-label="Shop across electronics, home and kitchen">
               <div className="hero-orbit"></div>
               <figure className="hero-image hero-image-main">
-                <img src="img/dell.jpeg" alt="Laptop from the electronics collection" />
+                <img src="img/dell.jpeg" alt="Laptop from the electronics collection" decoding="async" fetchPriority="high" />
                 <figcaption><span>Tech that works</span><strong>Everyday electronics</strong></figcaption>
               </figure>
               <figure className="hero-image hero-image-small hero-image-kitchen"><img src="img/sufurias_and_lids.jpeg" alt="Cookware from the kitchen collection" /></figure>
