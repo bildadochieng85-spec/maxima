@@ -315,6 +315,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange-strong);
   .section, .benefits, .closing-banner { width: calc(100% - 32px); }
 }
 
+@media (min-width: 821px) and (max-width: 1100px) {
+  .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
 @media (max-width: 600px) {
   .announcement { font-size: 10px; }
   .header-main { min-height: 0; padding: 14px 0 11px; display: grid; grid-template-columns: 1fr auto; gap: 13px; }
