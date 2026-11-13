@@ -732,7 +732,7 @@ export function CartPage({ cart, onChangeQuantity, onSetQuantity, onRemove, onSa
             <h2>Order summary</h2>
             <p><span>Delivery</span><span>Calculated separately</span></p>
             <hr />
-            <p className="summary-total"><span>Items subtotal</span><strong>{formatPrice(total)}</strong></p>
+            <p className="summary-total"><span>Items subtotal</span><strong aria-live="polite" aria-atomic="true">{formatPrice(total)}</strong></p>
             <DeliveryCostNote />
             <a className="button button-primary" href="#/checkout">Proceed to checkout</a>
             <button type="button" className="text-button" onClick={onClear}>Clear cart</button>
