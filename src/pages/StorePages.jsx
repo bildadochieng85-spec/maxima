@@ -213,15 +213,13 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
               </h2>
             </div>
             <div className="section-heading-controls">
-              {hasSearchFilters && (
-                <label className="catalog-sort">Sort by
-                  <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
-                    <option value="recommended">Recommended</option>
-                    <option value="price-low">Price: low to high</option>
-                    <option value="price-high">Price: high to low</option>
-                  </select>
-                </label>
-              )}
+              <label className="catalog-sort">Sort by
+                <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
+                  <option value="recommended">Recommended</option>
+                  <option value="price-low">Price: low to high</option>
+                  <option value="price-high">Price: high to low</option>
+                </select>
+              </label>
               <a className="text-link" href="#/categories">See all categories <span aria-hidden="true">→</span></a>
             </div>
           </div>
