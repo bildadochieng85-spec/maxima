@@ -753,6 +753,37 @@ export function CheckoutPage({ cart, user }) {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [customerName, setCustomerName] = useState(user?.displayName || "");
+  const [phone, setPhone] = useState("");
+  const [contactNotice, setContactNotice] = useState("");
+  const phoneEdited = useRef(false);
+
+  useEffect(() => {
+    setCustomerName(user?.displayName || "");
+    setPhone("");
+    setContactNotice("");
+    phoneEdited.current = false;
+    if (!user) return undefined;
+
+    let active = true;
+    async function loadSavedPhone() {
+      try {
+        const { data, error: profileError } = await getSupabaseClient()
+          .from("profiles")
+          .select("phone")
+          .eq("id", user.uid)
+          .maybeSingle();
+        if (profileError) throw profileError;
+        if (active && !phoneEdited.current && data?.phone) setPhone(data.phone);
+      } catch (profileError) {
+        console.error("Could not load the saved checkout phone number.", profileError);
+        if (active) setContactNotice("Saved phone unavailable. You can enter it below.");
+      }
+    }
+
+    loadSavedPhone();
+    return () => { active = false; };
+  }, [user]);
 
   async function placeOrder(event) {
     event.preventDefault();
@@ -762,21 +793,21 @@ export function CheckoutPage({ cart, user }) {
     }
 
     const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") || "").trim();
-    const phone = normalizePhone(form.get("phone"));
+    const name = customerName.trim();
+    const normalizedPhone = normalizePhone(phone);
     const address = String(form.get("address") || "").trim();
-    if (!name || !phone) {
+    if (!name || !normalizedPhone) {
       setError("Please enter your full name and phone number.");
       return;
     }
-    if (!isValidKenyanPhone(phone)) {
+    if (!isValidKenyanPhone(normalizedPhone)) {
       setError("Enter a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX.");
       return;
     }
 
     const pendingOrder = {
       checkoutId: `ORDER_${Date.now()}`,
-      customer: { name, phone, address },
+      customer: { name, phone: normalizedPhone, address },
       items: cart,
       total,
       status: "PENDING_PAYMENT",
@@ -846,8 +877,9 @@ export function CheckoutPage({ cart, user }) {
         </section>
         <form className="checkout-card customer-form" onSubmit={placeOrder}>
           <h2>Customer details</h2>
-          <label>Full name<input name="name" autoComplete="name" required /></label>
-          <label>Phone<input name="phone" type="tel" placeholder="2547XXXXXXXX" autoComplete="tel" required pattern="(?:\+?254|0)7\d{8}" title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX" /></label>
+          <label>Full name<input name="name" autoComplete="name" required value={customerName} onChange={event => setCustomerName(event.target.value)} /></label>
+          <label>Phone<input name="phone" type="tel" placeholder="2547XXXXXXXX" autoComplete="tel" required pattern="(?:\+?254|0)7\d{8}" title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX" value={phone} onChange={event => { phoneEdited.current = true; setPhone(event.target.value); }} /></label>
+          {contactNotice && <p className="muted" role="status">{contactNotice}</p>}
           <label>Delivery address <span className="muted">(optional)</span><textarea name="address" rows="3" autoComplete="street-address" /></label>
           {error && <p className="form-error" role="alert">{error}</p>}
           <button type="submit" className="button button-primary" disabled={!cart.length || busy}>{busy ? "Saving order..." : "Place order &amp; pay (M-Pesa)"}</button>
