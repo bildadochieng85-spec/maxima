@@ -209,7 +209,7 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
               <p className="eyebrow">{hasSearchFilters ? "Catalog results" : "Worth a closer look"}</p>
               <h2>
                 {hasSearchFilters ? "Search results" : "Popular picks"}
-                {hasSearchFilters && <span className="muted"> ({matchingProducts.length})</span>}
+                <span className="muted"> ({matchingProducts.length})</span>
               </h2>
             </div>
             <div className="section-heading-controls">
