@@ -339,7 +339,7 @@ export function CategoryPage({ categoryId, query, wishlist, onToggleWishlist, on
         </aside>
         <div className="category-results">
           <div className="section-heading catalog-section-heading">
-            <h2>{term ? "Search results" : "Products"} <span className="muted">({categoryProducts.length})</span></h2>
+            <h2>{term ? "Search results" : "Products"} <span className="muted" aria-live="polite" aria-atomic="true">({categoryProducts.length})</span></h2>
             <label className="catalog-sort">Sort by
               <select value={sortOrder} onChange={event => setSortOrder(event.target.value)}>
                 <option value="recommended">Recommended</option>
