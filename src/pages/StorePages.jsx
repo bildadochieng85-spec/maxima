@@ -837,6 +837,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
   const [phone, setPhone] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
   const [receiptNo, setReceiptNo] = useState("");
+  const [receiptCopyStatus, setReceiptCopyStatus] = useState("");
   const [signatureOpen, setSignatureOpen] = useState(false);
   const [signature, setSignature] = useState("");
   const canvasRef = useRef(null);
@@ -948,6 +949,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
     if (!succeeded) {
       setPaymentStatus("Payment failed. You can try again.");
       setReceiptNo("");
+      setReceiptCopyStatus("");
       return;
     }
     const normalizedPhone = normalizePhone(phone);
@@ -977,6 +979,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
 
     const receipt = `MP${Math.floor(Math.random() * 1e9)}`;
     setReceiptNo(receipt);
+    setReceiptCopyStatus("");
     setPaymentStatus("Payment successful");
     try {
       const pending = JSON.parse(localStorage.getItem("pendingOrder") || "null");
@@ -987,6 +990,20 @@ export function PaymentPage({ search, onPaymentSuccess }) {
       console.error("Could not update the saved order status.", storageError);
     }
     onPaymentSuccess();
+  }
+
+  async function copyReceiptNumber() {
+    if (!navigator.clipboard?.writeText) {
+      setReceiptCopyStatus("Copying is not supported by this browser.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(receiptNo);
+      setReceiptCopyStatus("Receipt number copied.");
+    } catch (copyError) {
+      console.error("Could not copy the receipt number.", copyError);
+      setReceiptCopyStatus("Could not copy the receipt number. Please copy it from the receipt.");
+    }
   }
 
   if (error && !order) {
@@ -1047,7 +1064,11 @@ export function PaymentPage({ search, onPaymentSuccess }) {
             <h2>MAXIMA STORES</h2>
             <p className="muted">Quality Furniture · Electronics · Home Essentials</p>
             <hr />
-            <p><strong>Receipt No:</strong> {receiptNo}</p>
+            <p className="receipt-line">
+              <span><strong>Receipt No:</strong> {receiptNo}</span>
+              <button type="button" className="text-button no-print" onClick={copyReceiptNumber}>Copy number</button>
+            </p>
+            {receiptCopyStatus && <p className="no-print" role="status">{receiptCopyStatus}</p>}
             <p><strong>Order ID:</strong> {order.checkoutId}</p>
             <p><strong>Date:</strong> {new Date().toLocaleString()}</p>
             <p><strong>M-Pesa Phone:</strong> {phone}</p>
