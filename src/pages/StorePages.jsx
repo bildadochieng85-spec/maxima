@@ -548,7 +548,7 @@ export function WishlistPage({ wishlist, onToggleWishlist, onAdd, onAddAll, rece
   return (
     <main className="page-container">
       <div className="wishlist-heading">
-        <h1>Saved items <span className="muted">({categoryFilter === "all" ? savedProducts.length : `${filteredSavedProducts.length} of ${savedProducts.length}`})</span></h1>
+        <h1>Saved items <span className="muted" aria-live="polite" aria-atomic="true">({categoryFilter === "all" ? savedProducts.length : `${filteredSavedProducts.length} of ${savedProducts.length}`})</span></h1>
         {savedProducts.length > 0 && (
           <div className="wishlist-actions">
             <button type="button" className="button button-primary" onClick={() => onAddAll(savedProducts)}>Add all to cart</button>
