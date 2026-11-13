@@ -719,7 +719,7 @@ export function CartPage({ cart, onChangeQuantity, onSetQuantity, onRemove, onSa
                 <div className="cart-line-end">
                   <strong>{formatPrice(item.price * item.quantity)}</strong>
                   {products.some(product => String(product.id) === item.id) && (
-                    <button type="button" className="save-for-later" onClick={() => onSaveForLater(item.id)}>
+                    <button type="button" className="save-for-later" onClick={() => onSaveForLater(item.id)} aria-label={`Save ${item.name} for later`}>
                       Save for later
                     </button>
                   )}
