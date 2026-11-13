@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { categories, featuredProducts, formatPrice, products } from "../catalog.js";
-import { db } from "../firebase.js";
+import { getSupabaseClient } from "../supabase.js";
 
 function matchesProduct(product, term) {
   const categoryName = categories.find(category => category.id === product.category)?.name || "";
@@ -753,8 +752,9 @@ export function CartPage({ cart, onChangeQuantity, onSetQuantity, onRemove, onSa
 export function CheckoutPage({ cart, user }) {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  function placeOrder(event) {
+  async function placeOrder(event) {
     event.preventDefault();
     if (!cart.length) {
       setError("Your cart is empty. Add an item before checking out.");
@@ -783,8 +783,36 @@ export function CheckoutPage({ cart, user }) {
       createdAt: new Date().toISOString(),
       ...(user ? { userId: user.uid } : {}),
     };
-    localStorage.setItem("pendingOrder", JSON.stringify(pendingOrder));
-    window.location.hash = "#/mpesa";
+    setError("");
+
+    if (!user) {
+      localStorage.setItem("pendingOrder", JSON.stringify(pendingOrder));
+      window.location.hash = "#/mpesa";
+      return;
+    }
+
+    setBusy(true);
+    try {
+      const { data, error: saveError } = await getSupabaseClient()
+        .from("orders")
+        .insert({
+          checkout_id: pendingOrder.checkoutId,
+          user_id: user.uid,
+          customer: pendingOrder.customer,
+          items: pendingOrder.items,
+          total: pendingOrder.total,
+          status: "Pending",
+        })
+        .select("id")
+        .single();
+      if (saveError) throw saveError;
+      window.location.hash = `#/mpesa?checkoutId=${encodeURIComponent(pendingOrder.checkoutId)}&docId=${encodeURIComponent(data.id)}`;
+    } catch (saveError) {
+      console.error("Could not save the checkout order.", saveError);
+      setError(saveError.message || "The order could not be saved. Please try again.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   function orderViaWhatsApp() {
@@ -822,7 +850,7 @@ export function CheckoutPage({ cart, user }) {
           <label>Phone<input name="phone" type="tel" placeholder="2547XXXXXXXX" autoComplete="tel" required pattern="(?:\+?254|0)7\d{8}" title="Use a valid Kenya mobile number, for example 2547XXXXXXXX or 07XXXXXXXX" /></label>
           <label>Delivery address <span className="muted">(optional)</span><textarea name="address" rows="3" autoComplete="street-address" /></label>
           {error && <p className="form-error" role="alert">{error}</p>}
-          <button type="submit" className="button button-primary" disabled={!cart.length}>Place order &amp; pay (M-Pesa)</button>
+          <button type="submit" className="button button-primary" disabled={!cart.length || busy}>{busy ? "Saving order..." : "Place order &amp; pay (M-Pesa)"}</button>
           <button type="button" className="button button-whatsapp" onClick={orderViaWhatsApp}>Order via WhatsApp</button>
         </form>
       </div>
@@ -891,16 +919,30 @@ export function PaymentPage({ search, onPaymentSuccess }) {
       const requestedId = checkoutId || pending?.checkoutId;
       if (requestedId && docId) {
         try {
-          const snapshot = await getDoc(doc(db, "checkout", docId));
-          if (snapshot.exists()) {
-            if (active) {
-              setOrder({ id: snapshot.id, ...snapshot.data(), checkoutId: requestedId });
-              setIsLocalOrder(false);
-            }
-            return;
+          const { data, error: loadError } = await getSupabaseClient()
+            .from("orders")
+            .select("*")
+            .eq("id", docId)
+            .single();
+          if (loadError) throw loadError;
+          if (active) {
+            setOrder({
+              id: data.id,
+              checkoutId: data.checkout_id,
+              customer: data.customer,
+              items: data.items,
+              total: Number(data.total),
+              status: data.status,
+              createdAt: data.created_at,
+              paidPhone: data.paid_phone,
+            });
+            setIsLocalOrder(false);
           }
+          return;
         } catch (loadError) {
-          console.error("Could not load the saved checkout record.", loadError);
+          console.error("Could not load the saved checkout order.", loadError);
+          if (active) setError("The saved order could not be loaded. Please try again or return to checkout.");
+          return;
         }
       }
 
@@ -965,11 +1007,17 @@ export function PaymentPage({ search, onPaymentSuccess }) {
 
     if (!isLocalOrder && docId && order?.id) {
       try {
-        await updateDoc(doc(db, "checkout", docId), {
-          status: "Paid",
-          paidAt: serverTimestamp(),
-          paidPhone: phone.trim(),
-        });
+        const { error: updateError } = await getSupabaseClient()
+          .from("orders")
+          .update({
+            status: "Paid",
+            paid_at: new Date().toISOString(),
+            paid_phone: phone.trim(),
+          })
+          .eq("id", docId)
+          .select("id")
+          .single();
+        if (updateError) throw updateError;
       } catch (updateError) {
         console.error("Could not update the checkout payment status.", updateError);
         setError("The payment simulation could not update this order. Please try again.");

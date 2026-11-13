@@ -8,8 +8,8 @@ import {
   updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
-import { auth, db } from "../firebase.js";
+import { auth } from "../firebase.js";
+import { getSupabaseClient } from "../supabase.js";
 import { formatPrice } from "../catalog.js";
 
 function AuthLayout({ children, title, intro }) {
@@ -157,22 +157,31 @@ export function DashboardPage({ user, loading }) {
       setPageLoading(true);
       setError("");
       try {
-        const profileRef = doc(db, "users", user.uid);
-        const profileSnapshot = await getDoc(profileRef);
-        if (profileSnapshot.exists()) {
-          const data = profileSnapshot.data();
-          if (active) setProfile({ phone: data.phone || "", whatsapp: data.whatsapp || "" });
+        const supabase = getSupabaseClient();
+        const { data: profileData, error: profileError } = await supabase
+          .from("profiles")
+          .select("phone, whatsapp")
+          .eq("id", user.uid)
+          .maybeSingle();
+        if (profileError) throw profileError;
+        if (profileData) {
+          if (active) setProfile({ phone: profileData.phone || "", whatsapp: profileData.whatsapp || "" });
         } else {
-          await setDoc(profileRef, {
+          const { error: createProfileError } = await supabase.from("profiles").upsert({
+            id: user.uid,
             name: user.displayName || "",
-            email: user.email,
-            createdAt: user.metadata.creationTime,
+            email: user.email || "",
           });
+          if (createProfileError) throw createProfileError;
         }
 
-        const orderQuery = query(collection(db, "checkout"), where("userId", "==", user.uid));
-        const orderSnapshot = await getDocs(orderQuery);
-        if (active) setOrders(orderSnapshot.docs.map(order => ({ id: order.id, ...order.data() })));
+        const { data: orderData, error: ordersError } = await supabase
+          .from("orders")
+          .select("*")
+          .eq("user_id", user.uid)
+          .order("created_at", { ascending: false });
+        if (ordersError) throw ordersError;
+        if (active) setOrders(orderData || []);
       } catch (loadError) {
         console.error("Could not load the account dashboard.", loadError);
         if (active) setError(loadError.message);
@@ -188,10 +197,14 @@ export function DashboardPage({ user, loading }) {
     event.preventDefault();
     setProfileMessage("");
     try {
-      await setDoc(doc(db, "users", user.uid), {
+      const { error: saveError } = await getSupabaseClient().from("profiles").upsert({
+        id: user.uid,
+        name: user.displayName || "",
+        email: user.email || "",
         phone: profile.phone.trim(),
         whatsapp: profile.whatsapp.trim(),
-      }, { merge: true });
+      });
+      if (saveError) throw saveError;
       setProfileMessage("Contact information saved.");
     } catch (saveError) {
       setProfileMessage(saveError.message);
@@ -225,7 +238,10 @@ export function DashboardPage({ user, loading }) {
     setError("");
     try {
       await updateEmail(user, email.trim());
-      await setDoc(doc(db, "users", user.uid), { email: email.trim() }, { merge: true });
+      const { error: updateError } = await getSupabaseClient()
+        .from("profiles")
+        .upsert({ id: user.uid, email: email.trim() });
+      if (updateError) throw updateError;
       setAccountEmail(email.trim());
     } catch (updateError) {
       setError(updateError.message);
