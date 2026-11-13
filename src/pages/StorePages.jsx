@@ -645,8 +645,19 @@ function CartQuantityInput({ item, onSetQuantity }) {
   );
 }
 
-export function CartPage({ cart, onChangeQuantity, onSetQuantity, onRemove, onSaveForLater, onClear }) {
+export function CartPage({ cart, onChangeQuantity, onSetQuantity, onRemove, onSaveForLater, onClear, onAdd, recentlyViewed = [], wishlist, onToggleWishlist }) {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const returnFocusRef = useRef(null);
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const recentlyViewedProducts = recentlyViewed
+    .map(id => products.find(product => String(product.id) === String(id)))
+    .filter(Boolean);
+  const recommendations = (recentlyViewedProducts.length ? recentlyViewedProducts : featuredProducts).slice(0, 4);
+  const openDialog = (product, trigger) => {
+    returnFocusRef.current = trigger;
+    setSelectedProduct(product);
+  };
+  const closeDialog = () => setSelectedProduct(null);
 
   return (
     <main className="page-container">
@@ -696,6 +707,24 @@ export function CartPage({ cart, onChangeQuantity, onSetQuantity, onRemove, onSa
           <a className="button button-primary" href="#/categories">Shop now</a>
         </div>
       )}
+      {!cart.length && (
+        <section className="product-related" aria-labelledby="cart-recommendations-heading">
+          <h2 id="cart-recommendations-heading">{recentlyViewedProducts.length ? "Pick up where you left off" : "Popular picks to get started"}</h2>
+          <div className="store-product-grid">
+            {recommendations.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onView={openDialog}
+                onAdd={onAdd}
+                isSaved={wishlist.includes(String(product.id))}
+                onToggleWishlist={onToggleWishlist}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+      <ProductDialog product={selectedProduct} onClose={closeDialog} onAdd={product => { onAdd(product); closeDialog(); }} returnFocusRef={returnFocusRef} />
     </main>
   );
 }
