@@ -896,6 +896,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
   const [error, setError] = useState("");
   const [phone, setPhone] = useState("");
   const [paymentStatus, setPaymentStatus] = useState("");
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [receiptNo, setReceiptNo] = useState("");
   const [receiptCopyStatus, setReceiptCopyStatus] = useState("");
   const [signatureOpen, setSignatureOpen] = useState(false);
@@ -904,6 +905,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
   const signatureDialogRef = useRef(null);
   const signatureTriggerRef = useRef(null);
   const isDrawing = useRef(false);
+  const paymentLock = useRef(false);
   const checkoutId = search.get("checkoutId");
   const docId = search.get("docId");
 
@@ -1020,6 +1022,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
   }
 
   async function simulatePayment(succeeded) {
+    if (paymentLock.current || order?.status === "Paid" || paymentStatus === "Payment successful") return;
     if (!succeeded) {
       setPaymentStatus("Payment failed. You can try again.");
       setReceiptNo("");
@@ -1036,9 +1039,10 @@ export function PaymentPage({ search, onPaymentSuccess }) {
       return;
     }
     setError("");
-
-    if (!isLocalOrder && docId && order?.id) {
-      try {
+    paymentLock.current = true;
+    setIsProcessingPayment(true);
+    try {
+      if (!isLocalOrder && docId && order?.id) {
         const { error: updateError } = await getSupabaseClient()
           .from("orders")
           .update({
@@ -1050,26 +1054,29 @@ export function PaymentPage({ search, onPaymentSuccess }) {
           .select("id")
           .single();
         if (updateError) throw updateError;
-      } catch (updateError) {
-        console.error("Could not update the checkout payment status.", updateError);
-        setError("The payment simulation could not update this order. Please try again.");
-        return;
       }
-    }
 
-    const receipt = `MP${Math.floor(Math.random() * 1e9)}`;
-    setReceiptNo(receipt);
-    setReceiptCopyStatus("");
-    setPaymentStatus("Payment successful");
-    try {
-      const pending = JSON.parse(localStorage.getItem("pendingOrder") || "null");
-      if (pending?.checkoutId === order.checkoutId) {
-        localStorage.setItem("pendingOrder", JSON.stringify({ ...pending, status: "Paid", paidPhone: phone.trim() }));
+      const receipt = `MP${Math.floor(Math.random() * 1e9)}`;
+      setReceiptNo(receipt);
+      setReceiptCopyStatus("");
+      setPaymentStatus("Payment successful");
+      setOrder(current => ({ ...current, status: "Paid" }));
+      try {
+        const pending = JSON.parse(localStorage.getItem("pendingOrder") || "null");
+        if (pending?.checkoutId === order.checkoutId) {
+          localStorage.setItem("pendingOrder", JSON.stringify({ ...pending, status: "Paid", paidPhone: phone.trim() }));
+        }
+      } catch (storageError) {
+        console.error("Could not update the saved order status.", storageError);
       }
-    } catch (storageError) {
-      console.error("Could not update the saved order status.", storageError);
+      onPaymentSuccess();
+    } catch (updateError) {
+      console.error("Could not update the checkout payment status.", updateError);
+      setError("The payment simulation could not update this order. Please try again.");
+    } finally {
+      paymentLock.current = false;
+      setIsProcessingPayment(false);
     }
-    onPaymentSuccess();
   }
 
   async function copyReceiptNumber() {
@@ -1133,8 +1140,8 @@ export function PaymentPage({ search, onPaymentSuccess }) {
         {error && <p className="form-error" role="alert">{error}</p>}
         {paymentStatus && <p className={receiptNo ? "form-success" : "form-error"} role="status">{paymentStatus}</p>}
         <div className="payment-actions">
-          <button type="button" className="button button-primary" onClick={() => simulatePayment(true)}>Simulate payment (success)</button>
-          <button type="button" className="button button-danger" onClick={() => simulatePayment(false)}>Simulate failure</button>
+          <button type="button" className="button button-primary" onClick={() => simulatePayment(true)} disabled={isProcessingPayment || order.status === "Paid"}>{order.status === "Paid" ? "Payment complete" : isProcessingPayment ? "Processing payment..." : "Simulate payment (success)"}</button>
+          <button type="button" className="button button-danger" onClick={() => simulatePayment(false)} disabled={isProcessingPayment || order.status === "Paid"}>Simulate failure</button>
           <a className="button button-light" href="#/checkout">Back to checkout</a>
         </div>
 
