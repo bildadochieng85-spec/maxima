@@ -127,7 +127,7 @@
 .cart-line { display: flex; align-items: center; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--line); }
 .cart-line:first-child { padding-top: 0; }
 .cart-line:last-child { border-bottom: 0; }
-.cart-line > img { width: 84px; height: 84px; border-radius: 7px; object-fit: cover; }
+.cart-line > img { width: 84px; height: 84px; border-radius: 7px; object-fit: contain; background: #f8f9fa; }
 .cart-line-info { flex: 1; min-width: 0; }
 .cart-line-info h2 { margin: 0 0 4px; color: var(--navy); font-size: 16px; }
 .cart-line-info p { margin: 0; color: var(--muted); font-size: 13px; }
