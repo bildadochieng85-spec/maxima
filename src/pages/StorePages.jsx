@@ -144,29 +144,41 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
 
   return (
     <>
-      <main>
-        <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Good finds, right around the corner</p>
-            <h1>Make room for<br /><span>better shopping.</span></h1>
-            <p className="hero-description">From everyday essentials to the little upgrades you have been wanting, find it all in one place.</p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#/featured">Explore products <span aria-hidden="true">→</span></a>
-              <a className="text-link" href="#/categories">Browse categories</a>
+      <main className="home-page">
+        <div className="home-hero-layout">
+          <aside className="home-category-menu" aria-label="Shop departments">
+            <h2>Shop by category</h2>
+            <div className="home-category-list">
+              {matchingCategories.map(category => (
+                <a href={`#/category/${category.id}`} key={category.id}>
+                  <span>{category.name}</span><span aria-hidden="true">›</span>
+                </a>
+              ))}
             </div>
-            <div className="trust-note"><span className="trust-dot"></span> Easy ordering <span className="trust-divider">·</span> Local marketplace</div>
-          </div>
-          <div className="hero-art" aria-label="Shop across electronics, home and kitchen">
-            <div className="hero-orbit"></div>
-            <figure className="hero-image hero-image-main">
-              <img src="img/dell.jpeg" alt="Laptop from the electronics collection" />
-              <figcaption><span>Tech that works</span><strong>Everyday electronics</strong></figcaption>
-            </figure>
-            <figure className="hero-image hero-image-small hero-image-kitchen"><img src="img/sufurias_and_lids.jpeg" alt="Cookware from the kitchen collection" /></figure>
-            <figure className="hero-image hero-image-small hero-image-home"><img src="img/bed.jpeg" alt="Bedroom furniture from the home collection" /></figure>
-            <span className="hero-sticker">FIND<br />YOUR<br />FAVORITE</span>
-          </div>
-        </section>
+          </aside>
+          <section className="hero">
+            <div className="hero-copy">
+              <p className="eyebrow">Good finds, right around the corner</p>
+              <h1>Make room for<br /><span>better shopping.</span></h1>
+              <p className="hero-description">From everyday essentials to the little upgrades you have been wanting, find it all in one place.</p>
+              <div className="hero-actions">
+                <a className="button button-primary" href="#/featured">Explore products <span aria-hidden="true">→</span></a>
+                <a className="text-link" href="#/categories">Browse categories</a>
+              </div>
+              <div className="trust-note"><span className="trust-dot"></span> Easy ordering <span className="trust-divider">·</span> Local marketplace</div>
+            </div>
+            <div className="hero-art" aria-label="Shop across electronics, home and kitchen">
+              <div className="hero-orbit"></div>
+              <figure className="hero-image hero-image-main">
+                <img src="img/dell.jpeg" alt="Laptop from the electronics collection" />
+                <figcaption><span>Tech that works</span><strong>Everyday electronics</strong></figcaption>
+              </figure>
+              <figure className="hero-image hero-image-small hero-image-kitchen"><img src="img/sufurias_and_lids.jpeg" alt="Cookware from the kitchen collection" /></figure>
+              <figure className="hero-image hero-image-small hero-image-home"><img src="img/bed.jpeg" alt="Bedroom furniture from the home collection" /></figure>
+              <span className="hero-sticker">FIND<br />YOUR<br />FAVORITE</span>
+            </div>
+          </section>
+        </div>
 
         <section className="benefits" aria-label="Shopping benefits">
           <div><span className="benefit-icon">✦</span><p><strong>Thoughtful finds</strong><small>Everyday products for your life</small></p></div>
