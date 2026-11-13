@@ -46,6 +46,7 @@
 .catalog-section-heading h2 { margin: 0; color: var(--navy); font-size: 23px; }
 .catalog-sort { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; white-space: nowrap; }
 .catalog-sort select { min-height: 34px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--ink); font: inherit; }
+.catalog-sort select:focus-visible { outline: 2px solid var(--orange-strong); outline-offset: 2px; border-color: var(--orange-strong); }
 .store-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
 .store-product-card { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
 .store-product-image-link { display: block; }
