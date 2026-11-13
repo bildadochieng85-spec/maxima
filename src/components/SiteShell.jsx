@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { categories, formatPrice } from "../catalog.js";
 
-export function Brand({ footer = false }) {
+export function Brand({ footer = false, current = false }) {
   return (
-    <a className={`brand${footer ? " brand-footer" : ""}`} href="#/" aria-label="Maximall home">
+    <a className={`brand${footer ? " brand-footer" : ""}`} href="#/" aria-current={current ? "page" : undefined} aria-label="Maximall home">
       <img src="img/logo.png" alt="" />
       <span>
         maximall
@@ -48,7 +48,7 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
       </div>
       <header className="site-header">
         <div className="header-main">
-          <Brand />
+          <Brand current={route === "/"} />
           <div className="delivery-location">
             <span>Deliver to</span>
             <strong><span aria-hidden="true">⌖</span> Kenya</strong>
