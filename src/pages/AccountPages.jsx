@@ -88,6 +88,7 @@ export function SignupPage() {
     const form = new FormData(event.currentTarget);
     const name = String(form.get("name") || "").trim();
     const email = String(form.get("email") || "").trim();
+    const phone = String(form.get("phone") || "").trim();
     const password = String(form.get("password") || "");
     const confirmPassword = String(form.get("confirmPassword") || "");
     if (password.length < 6) {
@@ -104,12 +105,23 @@ export function SignupPage() {
     }
 
     setBusy(true);
+    let accountCreated = false;
     try {
       const credential = await createUserWithEmailAndPassword(auth, email, password);
+      accountCreated = true;
       await updateProfile(credential.user, { displayName: name });
+      const { error: profileError } = await getSupabaseClient().from("profiles").upsert({
+        id: credential.user.uid,
+        name,
+        email,
+        phone,
+      });
+      if (profileError) throw profileError;
       window.location.hash = "#/dashboard";
     } catch (signupError) {
-      setError(signupError.message);
+      setError(accountCreated
+        ? `Your account was created, but profile information could not be saved: ${signupError.message} Sign in and update it from your dashboard.`
+        : signupError.message);
     } finally {
       setBusy(false);
     }
