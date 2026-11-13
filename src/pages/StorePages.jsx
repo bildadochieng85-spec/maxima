@@ -151,6 +151,7 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
             <div className="home-category-list">
               {matchingCategories.map(category => (
                 <a href={`#/category/${category.id}`} key={category.id}>
+                  <img src={category.image} alt="" loading="lazy" decoding="async" />
                   <span>{category.name}</span><span aria-hidden="true">›</span>
                 </a>
               ))}
