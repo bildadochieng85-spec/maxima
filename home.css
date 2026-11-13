@@ -131,13 +131,15 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange-strong);
 
 .home-category-menu {
   padding: 16px 14px;
+  display: grid;
+  grid-template-rows: auto 1fr;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #fff;
 }
 
 .home-category-menu h2 { margin: 0 0 10px; color: var(--ink); font-size: 15px; }
-.home-category-list { display: grid; }
+.home-category-list { display: grid; grid-auto-rows: 1fr; }
 .home-category-list a { min-height: 39px; padding: 8px 4px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid #f1f1f1; color: #555; font-size: 12px; }
 .home-category-list a img { width: 27px; height: 27px; flex: 0 0 27px; border-radius: 4px; background: #f7f7f7; object-fit: cover; }
 .home-category-list a span:first-of-type { flex: 1; }

@@ -149,7 +149,7 @@ export function HomePage({ query, searchCategory, wishlist, recentlyViewed = [],
           <aside className="home-category-menu" aria-label="Shop departments">
             <h2>Shop by category</h2>
             <div className="home-category-list">
-              {matchingCategories.map(category => (
+              {categories.map(category => (
                 <a href={`#/category/${category.id}`} key={category.id}>
                   <img src={category.image} alt="" loading="lazy" decoding="async" />
                   <span>{category.name}</span><span aria-hidden="true">›</span>
