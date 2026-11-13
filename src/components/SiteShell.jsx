@@ -88,7 +88,7 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
               <span className="wishlist-label">Saved</span>
               <span className="wishlist-count">{wishlistCount}</span>
             </a>
-            <a className="cart-link" href="#/cart" aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}${cartCount ? `, subtotal ${formatPrice(cartSubtotal)}` : ""}`}>
+            <a className="cart-link" href="#/cart" aria-current={route === "/cart" ? "page" : undefined} aria-label={`Cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}${cartCount ? `, subtotal ${formatPrice(cartSubtotal)}` : ""}`}>
               <span className="cart-icon" aria-hidden="true">🛒</span>
               <span className="cart-details">
                 <span>Cart <span className="cart-count" aria-live="polite" aria-atomic="true">{cartCount}</span></span>
