@@ -296,7 +296,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange-strong);
   .home-hero-layout { width: calc(100% - 32px); grid-template-columns: 200px minmax(0, 1fr); gap: 10px; }
   .hero { min-height: 360px; padding: 26px 20px; }
   .hero-art { transform: scale(.9); transform-origin: center; }
-  .category-grid, .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .section, .benefits, .closing-banner { width: calc(100% - 32px); }
 }
 
@@ -343,7 +344,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange-strong);
   .featured-section .section-heading-controls { width: 100%; justify-content: space-between; }
   .section-heading h2 { font-size: 25px; }
   .section-heading > p { max-width: 150px; font-size: 11px; text-align: right; }
-  .category-grid, .product-grid { gap: 9px; }
+  .category-grid, .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
   .category-card { padding: 11px; gap: 8px; }
   .category-title { font-size: 13px; }
   .category-card img { height: 105px; }
