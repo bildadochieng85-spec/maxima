@@ -840,9 +840,40 @@ export function PaymentPage({ search, onPaymentSuccess }) {
   const [signatureOpen, setSignatureOpen] = useState(false);
   const [signature, setSignature] = useState("");
   const canvasRef = useRef(null);
+  const signatureDialogRef = useRef(null);
+  const signatureTriggerRef = useRef(null);
   const isDrawing = useRef(false);
   const checkoutId = search.get("checkoutId");
   const docId = search.get("docId");
+
+  useEffect(() => {
+    if (!signatureOpen) {
+      signatureTriggerRef.current?.focus();
+      return undefined;
+    }
+
+    const dialog = signatureDialogRef.current;
+    const focusable = dialog?.querySelectorAll("button:not([disabled]), [tabindex]:not([tabindex='-1'])");
+    focusable?.[0]?.focus();
+
+    function handleSignatureKey(event) {
+      if (event.key === "Escape") {
+        setSignatureOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !focusable?.length) return;
+      if (event.shiftKey && document.activeElement === focusable[0]) {
+        event.preventDefault();
+        focusable[focusable.length - 1].focus();
+      } else if (!event.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+        event.preventDefault();
+        focusable[0].focus();
+      }
+    }
+
+    window.addEventListener("keydown", handleSignatureKey);
+    return () => window.removeEventListener("keydown", handleSignatureKey);
+  }, [signatureOpen]);
 
   useEffect(() => {
     let active = true;
@@ -1032,7 +1063,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
             {signature && <img className="signature-preview" src={signature} alt="Customer signature" />}
             <div className="payment-actions no-print">
               <button type="button" className="button button-primary" onClick={() => window.print()}>Print / PDF</button>
-              <button type="button" className="button button-light" onClick={() => setSignatureOpen(true)}>Sign receipt</button>
+              <button ref={signatureTriggerRef} type="button" className="button button-light" onClick={() => setSignatureOpen(true)}>Sign receipt</button>
               <a className="button button-whatsapp" href={`https://wa.me/?text=${encodeURIComponent(whatsAppMessage)}`} target="_blank" rel="noreferrer">WhatsApp</a>
             </div>
           </section>
@@ -1041,7 +1072,7 @@ export function PaymentPage({ search, onPaymentSuccess }) {
 
       {signatureOpen && (
         <div className="product-dialog-backdrop">
-          <section className="signature-dialog" role="dialog" aria-modal="true" aria-labelledby="signature-title">
+          <section ref={signatureDialogRef} className="signature-dialog" role="dialog" aria-modal="true" aria-labelledby="signature-title">
             <h2 id="signature-title">Sign receipt</h2>
             <canvas
               ref={canvasRef}
