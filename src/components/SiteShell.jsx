@@ -80,7 +80,7 @@ export default function SiteShell({ children, cartCount, cartSubtotal, onSearch,
             <button type="submit" aria-label="Search">Search</button>
           </form>
           <div className="header-actions">
-            <a className="account-link" href={user ? "#/dashboard" : "#/login"}>
+            <a className="account-link" href={user ? "#/dashboard" : "#/login"} aria-current={route === (user ? "/dashboard" : "/login") ? "page" : undefined}>
               <span aria-hidden="true">♙</span> {user ? "My account" : "Sign in"}
             </a>
             <a className="wishlist-link" href="#/wishlist" aria-current={route === "/wishlist" ? "page" : undefined} aria-label={`Saved items, ${wishlistCount}`}>
