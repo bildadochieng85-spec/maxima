@@ -242,12 +242,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--orange-strong);
 .product-price { display: block; margin: -6px 0 11px; color: var(--ink); font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
 .product-link { color: var(--blue); font-size: 11px; font-weight: 700; }
 .product-link span { margin-left: 5px; }
-.product-card-actions { padding: 0 14px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.product-card-actions button { min-width: 0; padding: 8px 4px; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; }
+.product-card-actions { padding: 0 14px 14px; display: grid; grid-template-columns: 1fr; gap: 6px; }
+.product-card-actions button { min-width: 0; min-height: 34px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 700; }
 .product-card-actions .product-add-button { border-color: var(--orange-strong); background: var(--orange-strong); color: #fff; }
 .product-add-button:hover { background: #8c3d07; }
 .product-quick-view { background: #fff; color: #555; }
-.product-quick-view:hover { background: #f8f9fa; }
+.product-quick-view:hover { border-color: var(--orange-strong); background: #fffaf5; color: var(--orange-strong); }
 .wishlist-button { position: absolute; z-index: 2; top: 10px; right: 10px; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: #a63c3c; cursor: pointer; font-size: 20px; line-height: 1; }
 .wishlist-button[aria-pressed="true"] { border-color: #e7b5b5; background: #fff3f3; color: #b42318; }
 .cart-notice { position: fixed; z-index: 1100; right: 20px; bottom: 20px; max-width: calc(100vw - 40px); padding: 13px 15px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; border: 1px solid var(--line); border-left: 4px solid #18794e; border-radius: 8px; background: #fff; box-shadow: 0 10px 30px #102b5326; color: var(--navy); font-size: 13px; }
