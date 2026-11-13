@@ -96,7 +96,7 @@ function ProductDialog({ product, onClose, onAdd, returnFocusRef }) {
     <div className="product-dialog-backdrop" onMouseDown={event => event.target === event.currentTarget && onClose()}>
       <section ref={dialogRef} className="product-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-product-name">
         <button type="button" className="dialog-close" onClick={onClose} aria-label="Close product details" autoFocus>×</button>
-        <img src={product.image} alt={product.name} />
+        <img src={product.image} alt={product.name} decoding="async" fetchPriority="high" />
         <div>
           <p className="eyebrow">{categories.find(category => category.id === product.category)?.name}</p>
           <h2 id="dialog-product-name">{product.name}</h2>
